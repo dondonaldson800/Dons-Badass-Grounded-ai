@@ -57,6 +57,28 @@ const Dashboard = () => {
     }
   };
 
+  const generateImage = async () => {
+    if (!imagePrompt.trim() || generatingImage) return;
+
+    setGeneratingImage(true);
+    try {
+      const response = await axios.post(`${API}/generate-image`, {
+        prompt: imagePrompt
+      });
+
+      setLastGeneratedImage({
+        image_data: response.data.image_data,
+        prompt: imagePrompt
+      });
+      setImagePrompt('');
+    } catch (error) {
+      console.error('Error generating image:', error);
+      alert('Failed to generate image. Please try again.');
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
   const createApp = async () => {
     try {
       await axios.post(`${API}/apps`, newApp);
