@@ -256,7 +256,21 @@ const Dashboard = () => {
         ))}
 
         {/* Empty State */}
-        {apps.length === 0 && (
+        {filteredApps.length === 0 && filterView === 'favorites' && (
+          <div className="col-span-full text-center py-20" data-testid="empty-favorites-state">
+            <div className="text-6xl mb-4">⭐</div>
+            <h3 className="text-xl font-bold mb-2">No Favorite Apps Yet</h3>
+            <p className="text-gray-400 mb-6">Star your favorite apps to see them here</p>
+            <button
+              onClick={() => setFilterView('all')}
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-semibold hover:shadow-lg transition-all"
+            >
+              View All Apps
+            </button>
+          </div>
+        )}
+
+        {filteredApps.length === 0 && filterView === 'all' && apps.length === 0 && (
           <div className="col-span-full text-center py-20" data-testid="empty-apps-state">
             <div className="text-6xl mb-4">🏰</div>
             <h3 className="text-xl font-bold mb-2">Start Building Your Empire</h3>
