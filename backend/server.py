@@ -373,13 +373,6 @@ async def delete_qa(qa_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Q&A not found")
     return {"message": "Q&A deleted successfully"}
-    ).sort("timestamp", 1).to_list(100)
-    
-    for msg in messages:
-        if isinstance(msg.get('timestamp'), str):
-            msg['timestamp'] = datetime.fromisoformat(msg['timestamp'])
-    
-    return messages
 
 # ============== IMAGE GENERATION ENDPOINTS ==============
 
