@@ -14,9 +14,11 @@ const Dashboard = () => {
   const [loadingAnswer, setLoadingAnswer] = useState(false);
   const [recentQA, setRecentQA] = useState([]);
   const [selectedAppForQA, setSelectedAppForQA] = useState(null);
+  const [uploadedFileQA, setUploadedFileQA] = useState(null);
   const [imagePrompt, setImagePrompt] = useState('');
   const [generatingImage, setGeneratingImage] = useState(false);
   const [lastGeneratedImage, setLastGeneratedImage] = useState(null);
+  const [uploadedFileImage, setUploadedFileImage] = useState(null);
 
   useEffect(() => {
     loadDashboard();
