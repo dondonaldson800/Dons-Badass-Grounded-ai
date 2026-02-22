@@ -389,6 +389,36 @@ const Dashboard = () => {
           </div>
           
           <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-2 font-semibold">Upload reference image (optional)</p>
+            <label className="flex items-center justify-center w-full p-3 bg-gray-800 border-2 border-dashed border-gray-700 rounded-xl hover:border-yellow-500 transition-all cursor-pointer mb-3">
+              <input 
+                type="file" 
+                className="hidden" 
+                accept="image/*"
+                onChange={(e) => setUploadedFileImage(e.target.files[0])}
+                data-testid="upload-image-ref"
+              />
+              <div className="text-center">
+                {uploadedFileImage ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-yellow-400">🖼️</span>
+                    <span className="text-xs text-yellow-400 font-semibold">{uploadedFileImage.name}</span>
+                    <button 
+                      onClick={(e) => { e.preventDefault(); setUploadedFileImage(null); }}
+                      className="text-red-400 text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="text-2xl mb-1 block">🖼️</span>
+                    <span className="text-xs text-gray-400">Upload reference image</span>
+                  </div>
+                )}
+              </div>
+            </label>
+
             <textarea
               value={imagePrompt}
               onChange={(e) => setImagePrompt(e.target.value)}
