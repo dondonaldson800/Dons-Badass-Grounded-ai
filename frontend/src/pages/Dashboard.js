@@ -272,7 +272,7 @@ const Dashboard = () => {
               onChange={(e) => setImagePrompt(e.target.value)}
               placeholder="Describe your image...
 Example: Futuristic delivery truck"
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 resize-none"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-yellow-500 resize-none"
               rows="3"
               disabled={generatingImage}
               data-testid="image-prompt-input"
