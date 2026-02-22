@@ -35,6 +35,7 @@ class App(BaseModel):
     revenue: float = 0.0
     status: str = "active"  # active, paused, archived
     icon: Optional[str] = None
+    is_favorited: bool = False  # New: Track if user favorited this app
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
