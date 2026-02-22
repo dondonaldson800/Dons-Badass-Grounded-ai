@@ -516,6 +516,7 @@ async def get_dashboard_stats():
     """Get overall dashboard statistics"""
     total_apps = await db.apps.count_documents({})
     active_apps = await db.apps.count_documents({"status": "active"})
+    favorited_apps = await db.apps.count_documents({"is_favorited": True})
     
     # Total revenue
     revenue_pipeline = [
@@ -532,7 +533,8 @@ async def get_dashboard_stats():
         active_apps=active_apps,
         total_revenue=total_revenue,
         total_images_generated=total_images,
-        total_chats=total_chats
+        total_chats=total_chats,
+        favorited_apps=favorited_apps
     )
 
 # ============== API KEY MANAGEMENT ==============
