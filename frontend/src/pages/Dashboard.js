@@ -70,7 +70,7 @@ const Dashboard = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Stats Overview */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
           <div className="stat-card rounded-xl p-6">
             <div className="text-gray-400 text-sm mb-2">🎯 Total Apps</div>
             <div className="text-3xl font-bold">{stats.total_apps}</div>
@@ -80,11 +80,15 @@ const Dashboard = () => {
             <div className="text-3xl font-bold text-green-400">{stats.active_apps}</div>
           </div>
           <div className="stat-card rounded-xl p-6">
+            <div className="text-gray-400 text-sm mb-2">⭐ My Favorites</div>
+            <div className="text-3xl font-bold text-yellow-400">{stats.favorited_apps}</div>
+          </div>
+          <div className="stat-card rounded-xl p-6">
             <div className="text-gray-400 text-sm mb-2">💵 Total Revenue</div>
             <div className="text-3xl font-bold text-green-400">${stats.total_revenue.toFixed(2)}</div>
           </div>
           <div className="stat-card rounded-xl p-6">
-            <div className="text-gray-400 text-sm mb-2">🇮 Images Generated</div>
+            <div className="text-gray-400 text-sm mb-2">🖼️ Images Generated</div>
             <div className="text-3xl font-bold text-purple-400">{stats.total_images_generated}</div>
           </div>
           <div className="stat-card rounded-xl p-6">
@@ -94,9 +98,32 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Apps Grid */}
+      {/* Filter Tabs */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Your Empire Apps</h2>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setFilterView('all')}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              filterView === 'all'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+                : 'bg-gray-800 hover:bg-gray-750'
+            }`}
+            data-testid="all-apps-filter"
+          >
+            📱 All Apps ({apps.length})
+          </button>
+          <button
+            onClick={() => setFilterView('favorites')}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              filterView === 'favorites'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+                : 'bg-gray-800 hover:bg-gray-750'
+            }`}
+            data-testid="favorites-filter"
+          >
+            ⭐ My Favorites ({apps.filter(a => a.is_favorited).length})
+          </button>
+        </div>
         <button
           onClick={() => setShowAddApp(!showAddApp)}
           className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-semibold hover:shadow-lg transition-all"
