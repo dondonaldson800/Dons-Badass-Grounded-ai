@@ -97,6 +97,29 @@ class DashboardStats(BaseModel):
     total_revenue: float
     total_images_generated: int
     total_chats: int
+    favorited_apps: int
+
+class QAItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    app_id: Optional[str] = None  # If related to specific app
+    question: str
+    answer: str
+    category: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class QARequest(BaseModel):
+    question: str
+    app_id: Optional[str] = None
+    category: Optional[str] = None
+
+class QAResponse(BaseModel):
+    answer: str
+    question: str
+    qa_id: str
+
+class FavoriteToggle(BaseModel):
+    app_id: str
 
 # ============== HELPER FUNCTIONS ==============
 
