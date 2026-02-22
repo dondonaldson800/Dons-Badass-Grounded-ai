@@ -20,14 +20,37 @@ const Dashboard = () => {
 
   const loadDashboard = async () => {
     try {
-      const [statsRes, appsRes] = await Promise.all([
+      const [statsRes, appsRes, qaRes] = await Promise.all([
         axios.get(`${API}/stats`),
-        axios.get(`${API}/apps`)
+        axios.get(`${API}/apps`),
+        axios.get(`${API}/qa/list`)
       ]);
       setStats(statsRes.data);
       setApps(appsRes.data);
+      setRecentQA(qaRes.data.slice(0, 3)); // Get last 3 Q&As
     } catch (error) {
       console.error('Error loading dashboard:', error);
+    }
+  };
+
+  const askQuestion = async () => {
+    if (!question.trim() || loadingAnswer) return;
+
+    setLoadingAnswer(true);
+    try {
+      const response = await axios.post(`${API}/qa/ask`, {
+        question: question,
+        app_id: null,
+        category: null
+      });
+
+      setRecentQA([response.data, ...recentQA].slice(0, 3));
+      setQuestion('');
+    } catch (error) {
+      console.error('Error asking question:', error);
+      alert('Failed to get answer. Please try again.');
+    } finally {
+      setLoadingAnswer(false);
     }
   };
 
