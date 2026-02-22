@@ -232,7 +232,7 @@ const Dashboard = () => {
           {/* App Selector - Step 1 */}
           <div className="mb-4">
             <p className="text-xs text-gray-400 mb-2 font-semibold">Step 1: Select an app (or ask general question)</p>
-            <div className="grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+            <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto bg-gray-900/50 p-2 rounded-lg border border-gray-800">
               <button
                 onClick={() => setSelectedAppForQA(null)}
                 className={`p-2 rounded-lg text-xs font-semibold transition-all ${
@@ -244,25 +244,25 @@ const Dashboard = () => {
               >
                 📋 General
               </button>
-              {apps.slice(0, 8).map((app) => (
+              {apps.map((app) => (
                 <button
                   key={app.id}
                   onClick={() => setSelectedAppForQA(app.id)}
                   className={`p-2 rounded-lg text-xs transition-all ${
                     selectedAppForQA === app.id
-                      ? 'bg-blue-500 text-white border-2 border-blue-400'
+                      ? 'bg-blue-500 text-white border-2 border-blue-400 shadow-lg shadow-blue-500/50'
                       : 'bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700'
                   }`}
                   data-testid={`select-app-${app.id}`}
                   title={app.name}
                 >
-                  <div className="text-lg mb-1">{app.icon}</div>
-                  <div className="truncate font-semibold">{app.name.split(' ')[0]}</div>
+                  <div className="text-xl mb-1">{app.icon}</div>
+                  <div className="truncate font-semibold leading-tight">{app.name.split(' ')[0]}</div>
                 </button>
               ))}
             </div>
             {selectedAppForQA && (
-              <div className="mt-2 text-xs text-blue-400 font-semibold">
+              <div className="mt-2 px-3 py-2 bg-blue-500/20 border border-blue-500 rounded-lg text-xs text-blue-400 font-semibold">
                 ✓ Selected: {apps.find(a => a.id === selectedAppForQA)?.name}
               </div>
             )}
