@@ -128,49 +128,109 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Quick Q&A Widget */}
-      <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-2 border-blue-500/50 rounded-2xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">❓ Quick Q&A</h2>
-          <span className="text-sm text-blue-400">Ask me anything!</span>
-        </div>
-        
-        {/* Question Input */}
-        <div className="mb-4">
-          <div className="flex gap-3">
-            <input
-              type="text"
+      {/* AI Interaction Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Quick Q&A Widget */}
+        <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-2 border-blue-500/50 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">❓ Ask a Question</h2>
+            <span className="text-xs bg-blue-900 text-blue-400 px-3 py-1 rounded-full">Q&A</span>
+          </div>
+          
+          {/* Question Input */}
+          <div className="mb-4">
+            <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && askQuestion()}
-              placeholder="What would you like to know? (e.g., How do I increase app revenue?)"
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500"
+              placeholder="What would you like to know?
+Example: How do I increase app revenue?"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 resize-none"
+              rows="3"
               disabled={loadingAnswer}
               data-testid="quick-qa-input"
             />
             <button
               onClick={askQuestion}
               disabled={!question.trim() || loadingAnswer}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-3 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="quick-qa-submit"
             >
-              {loadingAnswer ? '⏳' : '🔍'} Ask
+              {loadingAnswer ? (
+                <span className="flex items-center justify-center">
+                  <div className="spinner mr-3" style={{width: '16px', height: '16px', borderWidth: '2px'}}></div>
+                  Getting Answer...
+                </span>
+              ) : (
+                '🔍 Get Answer'
+              )}
             </button>
           </div>
+
+          {/* Recent Q&A */}
+          {recentQA.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs text-gray-400 font-semibold">Recent Answers:</p>
+              {recentQA.slice(0, 2).map((qa, idx) => (
+                <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-3 text-xs" data-testid={`recent-qa-${idx}`}>
+                  <div className="font-bold text-blue-400 mb-1">Q: {qa.question}</div>
+                  <div className="text-gray-300 line-clamp-2">A: {qa.answer}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {recentQA.length === 0 && !loadingAnswer && (
+            <div className="text-center py-6 text-gray-500 text-sm">
+              Ask your first question to get started!
+            </div>
+          )}
         </div>
 
-        {/* Recent Q&A */}
-        {recentQA.length > 0 && (
-          <div className="space-y-3">
-            <p className="text-sm text-gray-400">Recent Q&A:</p>
-            {recentQA.map((qa, idx) => (
-              <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-4" data-testid={`recent-qa-${idx}`}>
-                <div className="text-sm font-bold text-blue-400 mb-2">Q: {qa.question}</div>
-                <div className="text-sm text-gray-300">A: {qa.answer}</div>
-              </div>
-            ))}
+        {/* Chat with AI Widget */}
+        <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">💬 Chat with AI</h2>
+            <span className="text-xs bg-purple-900 text-purple-400 px-3 py-1 rounded-full">Live Chat</span>
           </div>
-        )}
+          
+          <div className="space-y-4">
+            <p className="text-sm text-gray-300">
+              Have a conversation with Empire AI. Get advice on medical, legal, business topics, or anything else!
+            </p>
+            
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <div className="text-sm text-gray-400 mb-3">Try asking:</div>
+              <div className="space-y-2 text-xs">
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400">💡</span>
+                  <span className="text-gray-300">"What are the symptoms of flu?"</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400">💡</span>
+                  <span className="text-gray-300">"Legal requirements for LLC?"</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400">💡</span>
+                  <span className="text-gray-300">"How to market my app?"</span>
+                </div>
+              </div>
+            </div>
+
+            <a 
+              href="/chat"
+              className="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-center hover:shadow-lg transition-all"
+              data-testid="open-chat-button"
+            >
+              🚀 Start Chatting
+            </a>
+
+            <div className="text-center">
+              <span className="text-xs text-gray-500">
+                Unlimited messages • No restrictions • Save history
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filter Tabs */}
