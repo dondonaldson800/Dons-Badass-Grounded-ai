@@ -273,6 +273,39 @@ const Dashboard = () => {
           {/* Question Input - Step 2 */}
           <div className="mb-4">
             <p className="text-xs text-gray-400 mb-2 font-semibold">Step 2: Ask your question</p>
+            
+            {/* File Upload */}
+            <div className="mb-3">
+              <label className="flex items-center justify-center w-full p-3 bg-gray-800 border-2 border-dashed border-gray-700 rounded-xl hover:border-blue-500 transition-all cursor-pointer">
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+                  onChange={(e) => setUploadedFileQA(e.target.files[0])}
+                  data-testid="upload-file-qa"
+                />
+                <div className="text-center">
+                  {uploadedFileQA ? (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-blue-400">📎</span>
+                      <span className="text-xs text-blue-400 font-semibold">{uploadedFileQA.name}</span>
+                      <button 
+                        onClick={(e) => { e.preventDefault(); setUploadedFileQA(null); }}
+                        className="text-red-400 text-xs"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <span className="text-2xl mb-1 block">📤</span>
+                      <span className="text-xs text-gray-400">Upload photo, video, or document (optional)</span>
+                    </div>
+                  )}
+                </div>
+              </label>
+            </div>
+
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
@@ -281,7 +314,7 @@ const Dashboard = () => {
                 : "What would you like to know?"
               }
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 resize-none text-sm"
-              rows="3"
+              rows="2"
               disabled={loadingAnswer}
               data-testid="quick-qa-input"
             />
