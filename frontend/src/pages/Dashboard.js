@@ -124,23 +124,23 @@ const Dashboard = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Hero Section - D's Empire */}
-      <div className="bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border-2 border-purple-500/50 rounded-3xl p-8 mb-8 text-center">
+      <div className="bg-gradient-to-r from-black via-blue-950 to-black border-2 border-blue-500 rounded-3xl p-8 mb-8 text-center shadow-2xl shadow-blue-500/20">
         <div className="flex items-center justify-center mb-4">
-          <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-5xl font-bold shadow-2xl">
-            D
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center text-6xl font-bold shadow-2xl shadow-blue-500/50 border-2 border-yellow-400">
+            <span className="bg-gradient-to-b from-yellow-300 to-yellow-500 bg-clip-text text-transparent">D</span>
           </div>
         </div>
-        <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-6xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent drop-shadow-lg">
           D's Empire
         </h1>
-        <p className="text-xl text-gray-300 font-semibold">
+        <p className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
           For Delivery Domain
         </p>
-        <div className="mt-4 flex items-center justify-center space-x-2">
-          <span className="px-4 py-1 bg-green-900/50 text-green-400 rounded-full text-sm font-semibold">
+        <div className="mt-6 flex items-center justify-center space-x-3">
+          <span className="px-5 py-2 bg-blue-500/20 text-blue-400 border border-blue-500 rounded-full text-sm font-bold shadow-lg shadow-blue-500/20">
             ✅ Live & Active
           </span>
-          <span className="px-4 py-1 bg-purple-900/50 text-purple-400 rounded-full text-sm font-semibold">
+          <span className="px-5 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500 rounded-full text-sm font-bold shadow-lg shadow-yellow-500/20">
             ⭐ Premium
           </span>
         </div>
