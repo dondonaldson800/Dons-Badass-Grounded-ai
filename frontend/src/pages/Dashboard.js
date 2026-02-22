@@ -280,7 +280,7 @@ Example: Futuristic delivery truck"
             <button
               onClick={generateImage}
               disabled={!imagePrompt.trim() || generatingImage}
-              className="w-full mt-3 py-3 bg-gradient-to-r from-orange-600 to-yellow-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-3 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl font-bold hover:shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-yellow-400"
               data-testid="generate-image-button"
             >
               {generatingImage ? '⏳ Creating...' : '✨ Generate Image'}
