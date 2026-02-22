@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [apps, setApps] = useState([]);
   const [showAddApp, setShowAddApp] = useState(false);
+  const [filterView, setFilterView] = useState('all'); // 'all' or 'favorites'
   const [newApp, setNewApp] = useState({ name: '', description: '', category: 'Business', icon: '📱' });
 
   useEffect(() => {
@@ -48,6 +49,20 @@ const Dashboard = () => {
       }
     }
   };
+
+  const toggleFavorite = async (appId, e) => {
+    e.stopPropagation();
+    try {
+      await axios.post(`${API}/apps/${appId}/favorite`);
+      loadDashboard();
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
+  const filteredApps = filterView === 'favorites' 
+    ? apps.filter(app => app.is_favorited) 
+    : apps;
 
   const appIcons = ['📱', '💻', '👨‍⚖️', '🏛️', '💰', '🏮', '🎮', '🎨', '📚', '⚽', '🎵', '🍽️'];
 
