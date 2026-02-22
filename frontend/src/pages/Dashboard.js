@@ -98,6 +98,29 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Hero Section - D's Empire */}
+      <div className="bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border-2 border-purple-500/50 rounded-3xl p-8 mb-8 text-center">
+        <div className="flex items-center justify-center mb-4">
+          <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-5xl font-bold shadow-2xl">
+            D
+          </div>
+        </div>
+        <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          D's Empire
+        </h1>
+        <p className="text-xl text-gray-300 font-semibold">
+          For Delivery Domain
+        </p>
+        <div className="mt-4 flex items-center justify-center space-x-2">
+          <span className="px-4 py-1 bg-green-900/50 text-green-400 rounded-full text-sm font-semibold">
+            ✅ Live & Active
+          </span>
+          <span className="px-4 py-1 bg-purple-900/50 text-purple-400 rounded-full text-sm font-semibold">
+            ⭐ Premium
+          </span>
+        </div>
+      </div>
+
       {/* Stats Overview */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
