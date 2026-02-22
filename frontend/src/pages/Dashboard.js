@@ -44,8 +44,8 @@ const Dashboard = () => {
     try {
       const response = await axios.post(`${API}/qa/ask`, {
         question: question,
-        app_id: null,
-        category: null
+        app_id: selectedAppForQA,
+        category: selectedAppForQA ? apps.find(a => a.id === selectedAppForQA)?.category : null
       });
 
       setRecentQA([response.data, ...recentQA].slice(0, 3));
