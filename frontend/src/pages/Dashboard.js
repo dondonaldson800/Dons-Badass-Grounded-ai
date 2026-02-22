@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [question, setQuestion] = useState('');
   const [loadingAnswer, setLoadingAnswer] = useState(false);
   const [recentQA, setRecentQA] = useState([]);
+  const [selectedAppForQA, setSelectedAppForQA] = useState(null);
   const [imagePrompt, setImagePrompt] = useState('');
   const [generatingImage, setGeneratingImage] = useState(false);
   const [lastGeneratedImage, setLastGeneratedImage] = useState(null);
