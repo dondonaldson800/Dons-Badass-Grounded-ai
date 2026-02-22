@@ -6,6 +6,7 @@ import AIChat from './pages/AIChat';
 import CreativeStudio from './pages/CreativeStudio';
 import RevenueAnalytics from './pages/RevenueAnalytics';
 import Settings from './pages/Settings';
+import QAPage from './pages/QAPage';
 
 const Navigation = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const Navigation = () => {
   const navItems = [
     { path: '/', label: '🏰 Dashboard', icon: '📊' },
     { path: '/chat', label: '🤖 Empire AI', icon: '💬' },
+    { path: '/qa', label: '❓ Q&A', icon: '📚' },
     { path: '/studio', label: '🎨 Studio', icon: '✨' },
     { path: '/revenue', label: '💰 Revenue', icon: '📈' },
     { path: '/settings', label: '⚙️ Settings', icon: '🔧' }
