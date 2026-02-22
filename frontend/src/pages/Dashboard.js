@@ -199,7 +199,7 @@ const Dashboard = () => {
             <button
               onClick={askQuestion}
               disabled={!question.trim() || loadingAnswer}
-              className="w-full mt-3 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-3 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl font-bold hover:shadow-lg hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-blue-400"
               data-testid="quick-qa-submit"
             >
               {loadingAnswer ? '⏳ Getting Answer...' : '🔍 Get Answer'}
