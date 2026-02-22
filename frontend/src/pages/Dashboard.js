@@ -177,7 +177,7 @@ const Dashboard = () => {
       )}
 
       {/* AI Interaction Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Quick Q&A Widget */}
         <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-2 border-blue-500/50 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
@@ -190,8 +190,7 @@ const Dashboard = () => {
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="What would you like to know?
-Example: How do I increase app revenue?"
+              placeholder="What would you like to know?"
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 resize-none"
               rows="3"
               disabled={loadingAnswer}
@@ -203,33 +202,24 @@ Example: How do I increase app revenue?"
               className="w-full mt-3 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="quick-qa-submit"
             >
-              {loadingAnswer ? (
-                <span className="flex items-center justify-center">
-                  <div className="spinner mr-3" style={{width: '16px', height: '16px', borderWidth: '2px'}}></div>
-                  Getting Answer...
-                </span>
-              ) : (
-                '🔍 Get Answer'
-              )}
+              {loadingAnswer ? '⏳ Getting Answer...' : '🔍 Get Answer'}
             </button>
           </div>
 
           {/* Recent Q&A */}
-          {recentQA.length > 0 && (
+          {recentQA.length > 0 ? (
             <div className="space-y-2">
-              <p className="text-xs text-gray-400 font-semibold">Recent Answers:</p>
-              {recentQA.slice(0, 2).map((qa, idx) => (
-                <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-3 text-xs" data-testid={`recent-qa-${idx}`}>
-                  <div className="font-bold text-blue-400 mb-1">Q: {qa.question}</div>
+              <p className="text-xs text-gray-400 font-semibold">Recent:</p>
+              {recentQA.slice(0, 1).map((qa, idx) => (
+                <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-3 text-xs">
+                  <div className="font-bold text-blue-400 mb-1 line-clamp-1">Q: {qa.question}</div>
                   <div className="text-gray-300 line-clamp-2">A: {qa.answer}</div>
                 </div>
               ))}
             </div>
-          )}
-
-          {recentQA.length === 0 && !loadingAnswer && (
-            <div className="text-center py-6 text-gray-500 text-sm">
-              Ask your first question to get started!
+          ) : (
+            <div className="text-center py-4 text-gray-500 text-xs">
+              Ask your first question!
             </div>
           )}
         </div>
@@ -238,29 +228,20 @@ Example: How do I increase app revenue?"
         <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">💬 Chat with AI</h2>
-            <span className="text-xs bg-purple-900 text-purple-400 px-3 py-1 rounded-full">Live Chat</span>
+            <span className="text-xs bg-purple-900 text-purple-400 px-3 py-1 rounded-full">Live</span>
           </div>
           
           <div className="space-y-4">
             <p className="text-sm text-gray-300">
-              Have a conversation with Empire AI. Get advice on medical, legal, business topics, or anything else!
+              Have conversations with Empire AI about medical, legal, business topics!
             </p>
             
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <div className="text-sm text-gray-400 mb-3">Try asking:</div>
-              <div className="space-y-2 text-xs">
-                <div className="flex items-start space-x-2">
-                  <span className="text-blue-400">💡</span>
-                  <span className="text-gray-300">"What are the symptoms of flu?"</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="text-blue-400">💡</span>
-                  <span className="text-gray-300">"Legal requirements for LLC?"</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="text-blue-400">💡</span>
-                  <span className="text-gray-300">"How to market my app?"</span>
-                </div>
+            <div className="bg-gray-800/50 rounded-lg p-3">
+              <div className="text-xs text-gray-400 mb-2">Try asking:</div>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div>💡 "Symptoms of flu?"</div>
+                <div>💡 "Legal requirements for LLC?"</div>
+                <div>💡 "How to market my app?"</div>
               </div>
             </div>
 
@@ -272,12 +253,54 @@ Example: How do I increase app revenue?"
               🚀 Start Chatting
             </a>
 
-            <div className="text-center">
-              <span className="text-xs text-gray-500">
-                Unlimited messages • No restrictions • Save history
-              </span>
+            <div className="text-center text-xs text-gray-500">
+              Unlimited • No restrictions
             </div>
           </div>
+        </div>
+
+        {/* Image Generator Widget */}
+        <div className="bg-gradient-to-br from-orange-900/30 to-yellow-900/30 border-2 border-orange-500/50 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">🎨 Create Image</h2>
+            <span className="text-xs bg-orange-900 text-orange-400 px-3 py-1 rounded-full">AI Art</span>
+          </div>
+          
+          <div className="mb-4">
+            <textarea
+              value={imagePrompt}
+              onChange={(e) => setImagePrompt(e.target.value)}
+              placeholder="Describe your image...
+Example: Futuristic delivery truck"
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 resize-none"
+              rows="3"
+              disabled={generatingImage}
+              data-testid="image-prompt-input"
+            />
+            <button
+              onClick={generateImage}
+              disabled={!imagePrompt.trim() || generatingImage}
+              className="w-full mt-3 py-3 bg-gradient-to-r from-orange-600 to-yellow-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              data-testid="generate-image-button"
+            >
+              {generatingImage ? '⏳ Creating...' : '✨ Generate Image'}
+            </button>
+          </div>
+
+          {lastGeneratedImage ? (
+            <div className="bg-gray-800/50 rounded-lg p-2">
+              <img 
+                src={`data:image/png;base64,${lastGeneratedImage.image_data}`}
+                alt="Generated"
+                className="w-full h-24 object-cover rounded-lg mb-2"
+              />
+              <p className="text-xs text-gray-400 line-clamp-1">{lastGeneratedImage.prompt}</p>
+            </div>
+          ) : (
+            <div className="text-center py-4 text-gray-500 text-xs">
+              Generate your first image!
+            </div>
+          )}
         </div>
       </div>
 
