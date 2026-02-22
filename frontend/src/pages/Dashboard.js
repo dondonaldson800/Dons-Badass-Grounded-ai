@@ -247,7 +247,7 @@ const Dashboard = () => {
 
             <a 
               href="/chat"
-              className="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-center hover:shadow-lg transition-all"
+              className="block w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl font-bold text-center hover:shadow-lg hover:shadow-cyan-500/50 transition-all border border-cyan-400"
               data-testid="open-chat-button"
             >
               🚀 Start Chatting
