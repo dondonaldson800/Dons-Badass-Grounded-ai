@@ -204,6 +204,34 @@ async def delete_app(app_id: str):
         raise HTTPException(status_code=404, detail="App not found")
     return {"message": "App deleted successfully"}
 
+@api_router.post("/apps/{app_id}/favorite")
+async def toggle_favorite(app_id: str):
+    """Toggle favorite status for an app"""
+    app = await db.apps.find_one({"id": app_id}, {"_id": 0})
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
+    
+    # Toggle favorite
+    new_favorite_status = not app.get('is_favorited', False)
+    
+    await db.apps.update_one(
+        {"id": app_id},
+        {"$set": {"is_favorited": new_favorite_status, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    return {"app_id": app_id, "is_favorited": new_favorite_status}
+
+@api_router.get("/apps/favorites/list", response_model=List[App])
+async def get_favorite_apps():
+    """Get only favorited apps"""
+    apps = await db.apps.find({"is_favorited": True}, {"_id": 0}).to_list(100)
+    for app in apps:
+        if isinstance(app.get('created_at'), str):
+            app['created_at'] = datetime.fromisoformat(app['created_at'])
+        if isinstance(app.get('updated_at'), str):
+            app['updated_at'] = datetime.fromisoformat(app['updated_at'])
+    return apps
+
 # ============== AI CHAT ENDPOINTS ==============
 
 @api_router.post("/chat", response_model=ChatResponse)
