@@ -128,6 +128,51 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Quick Q&A Widget */}
+      <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-2 border-blue-500/50 rounded-2xl p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">❓ Quick Q&A</h2>
+          <span className="text-sm text-blue-400">Ask me anything!</span>
+        </div>
+        
+        {/* Question Input */}
+        <div className="mb-4">
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && askQuestion()}
+              placeholder="What would you like to know? (e.g., How do I increase app revenue?)"
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500"
+              disabled={loadingAnswer}
+              data-testid="quick-qa-input"
+            />
+            <button
+              onClick={askQuestion}
+              disabled={!question.trim() || loadingAnswer}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              data-testid="quick-qa-submit"
+            >
+              {loadingAnswer ? '⏳' : '🔍'} Ask
+            </button>
+          </div>
+        </div>
+
+        {/* Recent Q&A */}
+        {recentQA.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-400">Recent Q&A:</p>
+            {recentQA.map((qa, idx) => (
+              <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-4" data-testid={`recent-qa-${idx}`}>
+                <div className="text-sm font-bold text-blue-400 mb-2">Q: {qa.question}</div>
+                <div className="text-sm text-gray-300">A: {qa.answer}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Filter Tabs */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex space-x-2">
