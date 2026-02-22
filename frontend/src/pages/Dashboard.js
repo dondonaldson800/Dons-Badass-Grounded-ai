@@ -64,6 +64,10 @@ const Dashboard = () => {
     ? apps.filter(app => app.is_favorited) 
     : apps;
 
+  // Separate featured and regular apps
+  const featuredApps = filteredApps.filter(app => app.is_featured);
+  const regularApps = filteredApps.filter(app => !app.is_featured);
+
   const appIcons = ['📱', '💻', '👨‍⚖️', '🏛️', '💰', '🏮', '🎮', '🎨', '📚', '⚽', '🎵', '🍽️'];
 
   return (
