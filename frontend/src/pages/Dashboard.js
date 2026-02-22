@@ -133,8 +133,8 @@ const Dashboard = () => {
         </div>
 
         {/* Giant D Background */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-10">
-          <div className="text-[400px] font-bold bg-gradient-to-b from-blue-500 via-cyan-400 to-blue-600 bg-clip-text text-transparent">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30">
+          <div className="text-[400px] font-bold bg-gradient-to-b from-blue-500 via-cyan-400 to-blue-600 bg-clip-text text-transparent" style={{WebkitTextStroke: '2px rgba(59, 130, 246, 0.3)'}}>
             D
           </div>
         </div>
