@@ -260,10 +260,10 @@ const Dashboard = () => {
         </div>
 
         {/* Image Generator Widget */}
-        <div className="bg-gradient-to-br from-orange-900/30 to-yellow-900/30 border-2 border-orange-500/50 rounded-2xl p-6">
+        <div className="bg-gradient-to-br from-yellow-950 to-black border-2 border-yellow-500 rounded-2xl p-6 shadow-xl shadow-yellow-500/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">🎨 Create Image</h2>
-            <span className="text-xs bg-orange-900 text-orange-400 px-3 py-1 rounded-full">AI Art</span>
+            <h2 className="text-xl font-bold text-yellow-400">🎨 Create Image</h2>
+            <span className="text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500">AI Art</span>
           </div>
           
           <div className="mb-4">
