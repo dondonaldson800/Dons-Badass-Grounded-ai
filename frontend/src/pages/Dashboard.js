@@ -213,19 +213,31 @@ const Dashboard = () => {
 
       {/* Apps Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {apps.map((app) => (
+        {filteredApps.map((app) => (
           <div key={app.id} className="card-hover bg-gray-900 border border-gray-800 rounded-xl p-6" data-testid={`app-card-${app.id}`}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-3xl">
                 {app.icon || '📱'}
               </div>
-              <button
-                onClick={() => deleteApp(app.id)}
-                className="text-gray-500 hover:text-red-500 transition-colors"
-                data-testid={`delete-app-${app.id}`}
-              >
-                ❌
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={(e) => toggleFavorite(app.id, e)}
+                  className={`text-2xl transition-all hover:scale-110 ${
+                    app.is_favorited ? 'filter-none' : 'grayscale opacity-40 hover:opacity-100'
+                  }`}
+                  data-testid={`favorite-app-${app.id}`}
+                  title={app.is_favorited ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  ⭐
+                </button>
+                <button
+                  onClick={() => deleteApp(app.id)}
+                  className="text-gray-500 hover:text-red-500 transition-colors"
+                  data-testid={`delete-app-${app.id}`}
+                >
+                  ❌
+                </button>
+              </div>
             </div>
             <h3 className="text-lg font-bold mb-2 truncate">{app.name}</h3>
             <p className="text-sm text-gray-400 mb-4 line-clamp-2">{app.description}</p>
