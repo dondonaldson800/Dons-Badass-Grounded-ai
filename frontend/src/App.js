@@ -69,6 +69,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/chat" element={<AIChat />} />
+          <Route path="/qa" element={<QAPage />} />
           <Route path="/studio" element={<CreativeStudio />} />
           <Route path="/revenue" element={<RevenueAnalytics />} />
           <Route path="/settings" element={<Settings />} />
