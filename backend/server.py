@@ -301,6 +301,86 @@ async def get_chat_history(session_id: str):
     
     return messages
 
+# ============== Q&A ENDPOINTS ==============
+
+@api_router.post("/qa/ask", response_model=QAResponse)
+async def ask_question(request: QARequest):
+    """Ask a question and get AI answer, save it as Q&A"""
+    try:
+        api_key = os.getenv("EMERGENT_LLM_KEY")
+        
+        # Create context based on app_id if provided
+        context = "You are Empire AI Assistant, providing expert answers to user questions."
+        if request.app_id:
+            # Get app details for context
+            app = await db.apps.find_one({"id": request.app_id}, {"_id": 0})
+            if app:
+                context += f"\n\nContext: The user is asking about {app['name']}, which is a {app['category']} app. Description: {app['description']}"
+        
+        chat_instance = LlmChat(
+            api_key=api_key,
+            session_id=f"qa_{uuid.uuid4()}",
+            system_message=context
+        )
+        
+        chat_instance.with_model("gemini", "gemini-3-flash-preview")
+        
+        # Get answer
+        answer = await chat_instance.send_message(UserMessage(text=request.question))
+        
+        # Save Q&A
+        qa_doc = QAItem(
+            question=request.question,
+            answer=answer,
+            app_id=request.app_id,
+            category=request.category
+        ).model_dump()
+        qa_doc['created_at'] = qa_doc['created_at'].isoformat()
+        
+        await db.qa_items.insert_one(qa_doc)
+        
+        return QAResponse(
+            answer=answer,
+            question=request.question,
+            qa_id=qa_doc['id']
+        )
+    
+    except Exception as e:
+        logging.error(f"Q&A error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Q&A error: {str(e)}")
+
+@api_router.get("/qa/list")
+async def get_qa_list(app_id: Optional[str] = None, category: Optional[str] = None):
+    """Get list of Q&A items, optionally filtered"""
+    query = {}
+    if app_id:
+        query['app_id'] = app_id
+    if category:
+        query['category'] = category
+    
+    qa_items = await db.qa_items.find(query, {"_id": 0}).sort("created_at", -1).limit(50).to_list(50)
+    
+    for item in qa_items:
+        if isinstance(item.get('created_at'), str):
+            item['created_at'] = datetime.fromisoformat(item['created_at'])
+    
+    return qa_items
+
+@api_router.delete("/qa/{qa_id}")
+async def delete_qa(qa_id: str):
+    """Delete a Q&A item"""
+    result = await db.qa_items.delete_one({"id": qa_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Q&A not found")
+    return {"message": "Q&A deleted successfully"}
+    ).sort("timestamp", 1).to_list(100)
+    
+    for msg in messages:
+        if isinstance(msg.get('timestamp'), str):
+            msg['timestamp'] = datetime.fromisoformat(msg['timestamp'])
+    
+    return messages
+
 # ============== IMAGE GENERATION ENDPOINTS ==============
 
 @api_router.post("/generate-image", response_model=ImageGenerateResponse)
