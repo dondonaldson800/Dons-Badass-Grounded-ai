@@ -225,10 +225,10 @@ const Dashboard = () => {
         </div>
 
         {/* Chat with AI Widget */}
-        <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-2xl p-6">
+        <div className="bg-gradient-to-br from-blue-950 to-black border-2 border-cyan-500 rounded-2xl p-6 shadow-xl shadow-cyan-500/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">💬 Chat with AI</h2>
-            <span className="text-xs bg-purple-900 text-purple-400 px-3 py-1 rounded-full">Live</span>
+            <h2 className="text-xl font-bold text-cyan-400">💬 Chat with AI</h2>
+            <span className="text-xs bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full border border-cyan-500">Live</span>
           </div>
           
           <div className="space-y-4">
