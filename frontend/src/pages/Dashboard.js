@@ -123,27 +123,70 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Hero Section - D's Empire */}
-      <div className="bg-gradient-to-r from-black via-blue-950 to-black border-2 border-blue-500 rounded-3xl p-8 mb-8 text-center shadow-2xl shadow-blue-500/20">
-        <div className="flex items-center justify-center mb-4">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center text-6xl font-bold shadow-2xl shadow-blue-500/50 border-2 border-yellow-400">
-            <span className="bg-gradient-to-b from-yellow-300 to-yellow-500 bg-clip-text text-transparent">D</span>
+      {/* Hero Section - D's Empire - Futuristic Tech Style */}
+      <div className="relative bg-gradient-to-b from-black via-blue-950 to-black border-2 border-blue-500 rounded-3xl p-12 mb-8 overflow-hidden shadow-2xl shadow-blue-500/30">
+        {/* Circuit Pattern Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-32 h-32 border-2 border-blue-400 rounded-full"></div>
+          <div className="absolute top-20 right-20 w-24 h-24 border-2 border-cyan-400 rounded-full"></div>
+          <div className="absolute bottom-10 left-1/4 w-16 h-16 border-2 border-blue-400 rounded-full"></div>
+        </div>
+
+        {/* Giant D Background */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-10">
+          <div className="text-[400px] font-bold bg-gradient-to-b from-blue-500 via-cyan-400 to-blue-600 bg-clip-text text-transparent">
+            D
           </div>
         </div>
-        <h1 className="text-6xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent drop-shadow-lg">
-          D's Empire
-        </h1>
-        <p className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
-          For Delivery Domain
-        </p>
-        <div className="mt-6 flex items-center justify-center space-x-3">
-          <span className="px-5 py-2 bg-blue-500/20 text-blue-400 border border-blue-500 rounded-full text-sm font-bold shadow-lg shadow-blue-500/20">
-            ✅ Live & Active
-          </span>
-          <span className="px-5 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500 rounded-full text-sm font-bold shadow-lg shadow-yellow-500/20">
-            ⭐ Premium
-          </span>
+
+        {/* Content */}
+        <div className="relative z-10 text-center">
+          {/* EMPIRE - Main Title */}
+          <h1 className="text-7xl md:text-8xl font-black mb-4 tracking-wider">
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(34,211,238,0.5)]" style={{textShadow: '0 0 40px rgba(34,211,238,0.6)'}}>
+              EMPIRE
+            </span>
+          </h1>
+
+          {/* Decorative Line */}
+          <div className="flex items-center justify-center space-x-4 mb-6">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+            <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50"></div>
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+          </div>
+
+          {/* Tagline */}
+          <p className="text-2xl md:text-3xl font-bold tracking-widest mb-8">
+            <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(234,179,8,0.5)]">
+              FOR DELIVERY DOMAIN
+            </span>
+          </p>
+
+          {/* Status Badges */}
+          <div className="flex items-center justify-center space-x-4">
+            <div className="px-6 py-2 bg-blue-500/10 backdrop-blur-sm border-2 border-blue-500 rounded-full shadow-lg shadow-blue-500/30">
+              <span className="text-sm font-bold text-blue-400">✅ LIVE & ACTIVE</span>
+            </div>
+            <div className="px-6 py-2 bg-yellow-500/10 backdrop-blur-sm border-2 border-yellow-500 rounded-full shadow-lg shadow-yellow-500/30">
+              <span className="text-sm font-bold text-yellow-400">⭐ PREMIUM</span>
+            </div>
+          </div>
+
+          {/* Tech Accent Lines */}
+          <div className="mt-8 flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+            <div className="w-16 h-px bg-cyan-500"></div>
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+            <div className="w-16 h-px bg-blue-500"></div>
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+          </div>
         </div>
+
+        {/* Corner Accents */}
+        <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-blue-500"></div>
+        <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-cyan-500"></div>
+        <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-cyan-500"></div>
+        <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-blue-500"></div>
       </div>
 
       {/* Stats Overview */}
