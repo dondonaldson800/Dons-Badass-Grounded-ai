@@ -10,6 +10,9 @@ const Dashboard = () => {
   const [showAddApp, setShowAddApp] = useState(false);
   const [filterView, setFilterView] = useState('all'); // 'all' or 'favorites'
   const [newApp, setNewApp] = useState({ name: '', description: '', category: 'Business', icon: '📱' });
+  const [question, setQuestion] = useState('');
+  const [loadingAnswer, setLoadingAnswer] = useState(false);
+  const [recentQA, setRecentQA] = useState([]);
 
   useEffect(() => {
     loadDashboard();
