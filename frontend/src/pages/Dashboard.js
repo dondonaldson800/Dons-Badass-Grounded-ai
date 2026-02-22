@@ -179,10 +179,10 @@ const Dashboard = () => {
       {/* AI Interaction Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Quick Q&A Widget */}
-        <div className="bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-2 border-blue-500/50 rounded-2xl p-6">
+        <div className="bg-gradient-to-br from-blue-950 to-black border-2 border-blue-500 rounded-2xl p-6 shadow-xl shadow-blue-500/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">❓ Ask a Question</h2>
-            <span className="text-xs bg-blue-900 text-blue-400 px-3 py-1 rounded-full">Q&A</span>
+            <h2 className="text-xl font-bold text-blue-400">❓ Ask a Question</h2>
+            <span className="text-xs bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full border border-blue-500">Q&A</span>
           </div>
           
           {/* Question Input */}
