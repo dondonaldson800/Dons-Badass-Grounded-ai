@@ -228,14 +228,57 @@ const Dashboard = () => {
             <h2 className="text-xl font-bold text-blue-400">❓ Ask a Question</h2>
             <span className="text-xs bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full border border-blue-500">Q&A</span>
           </div>
-          
-          {/* Question Input */}
+
+          {/* App Selector - Step 1 */}
           <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-2 font-semibold">Step 1: Select an app (or ask general question)</p>
+            <div className="grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+              <button
+                onClick={() => setSelectedAppForQA(null)}
+                className={`p-2 rounded-lg text-xs font-semibold transition-all ${
+                  selectedAppForQA === null
+                    ? 'bg-blue-500 text-white border-2 border-blue-400'
+                    : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700'
+                }`}
+                data-testid="select-general-qa"
+              >
+                📋 General
+              </button>
+              {apps.slice(0, 8).map((app) => (
+                <button
+                  key={app.id}
+                  onClick={() => setSelectedAppForQA(app.id)}
+                  className={`p-2 rounded-lg text-xs transition-all ${
+                    selectedAppForQA === app.id
+                      ? 'bg-blue-500 text-white border-2 border-blue-400'
+                      : 'bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700'
+                  }`}
+                  data-testid={`select-app-${app.id}`}
+                  title={app.name}
+                >
+                  <div className="text-lg mb-1">{app.icon}</div>
+                  <div className="truncate font-semibold">{app.name.split(' ')[0]}</div>
+                </button>
+              ))}
+            </div>
+            {selectedAppForQA && (
+              <div className="mt-2 text-xs text-blue-400 font-semibold">
+                ✓ Selected: {apps.find(a => a.id === selectedAppForQA)?.name}
+              </div>
+            )}
+          </div>
+          
+          {/* Question Input - Step 2 */}
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-2 font-semibold">Step 2: Ask your question</p>
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="What would you like to know?"
-              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 resize-none"
+              placeholder={selectedAppForQA 
+                ? `Ask about ${apps.find(a => a.id === selectedAppForQA)?.name}...`
+                : "What would you like to know?"
+              }
+              className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 resize-none text-sm"
               rows="3"
               disabled={loadingAnswer}
               data-testid="quick-qa-input"
@@ -263,7 +306,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="text-center py-4 text-gray-500 text-xs">
-              Ask your first question!
+              Select an app & ask!
             </div>
           )}
         </div>
