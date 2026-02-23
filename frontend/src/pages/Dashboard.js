@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useToast, ToastContainer } from '../components/Toast';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -19,6 +20,12 @@ const Dashboard = () => {
   const [generatingImage, setGeneratingImage] = useState(false);
   const [lastGeneratedImage, setLastGeneratedImage] = useState(null);
   const [uploadedFileImage, setUploadedFileImage] = useState(null);
+  
+  // New states for improvements
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('name'); // 'name', 'revenue', 'date'
+  const { toasts, showToast, removeToast } = useToast();
 
   useEffect(() => {
     loadDashboard();
