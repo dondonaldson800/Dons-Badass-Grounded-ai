@@ -338,11 +338,11 @@ const Dashboard = () => {
           {/* Recent Q&A */}
           {recentQA.length > 0 ? (
             <div className="space-y-2">
-              <p className="text-xs text-gray-400 font-semibold">Recent:</p>
+              <p className="text-xs text-gray-400 font-semibold">Recent Answer:</p>
               {recentQA.slice(0, 1).map((qa, idx) => (
-                <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-3 text-xs">
-                  <div className="font-bold text-blue-400 mb-1 line-clamp-1">Q: {qa.question}</div>
-                  <div className="text-gray-300 line-clamp-2">A: {qa.answer}</div>
+                <div key={qa.id || idx} className="bg-gray-800/50 rounded-lg p-4 text-xs max-h-64 overflow-y-auto">
+                  <div className="font-bold text-blue-400 mb-2">Q: {qa.question}</div>
+                  <div className="text-gray-300 whitespace-pre-wrap leading-relaxed">A: {qa.answer}</div>
                 </div>
               ))}
             </div>
