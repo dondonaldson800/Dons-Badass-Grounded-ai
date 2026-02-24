@@ -31,7 +31,27 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadDashboard();
+    checkCredits();
   }, []);
+
+  const checkCredits = async () => {
+    setLoadingCredits(true);
+    try {
+      // Check if backend has credits endpoint
+      const response = await axios.get(`${API}/credits`);
+      setCredits(response.data);
+    } catch (error) {
+      console.log('Credits check not available:', error);
+      // Set default display
+      setCredits({ 
+        available: true, 
+        key: 'sk-emergent-***',
+        message: 'Using Emergent LLM Key' 
+      });
+    } finally {
+      setLoadingCredits(false);
+    }
+  };
 
   const loadDashboard = async () => {
     try {
