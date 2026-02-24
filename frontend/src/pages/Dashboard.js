@@ -26,6 +26,8 @@ const Dashboard = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name'); // 'name', 'revenue', 'date'
   const { toasts, showToast, removeToast } = useToast();
+  const [credits, setCredits] = useState(null);
+  const [loadingCredits, setLoadingCredits] = useState(false);
 
   useEffect(() => {
     loadDashboard();
