@@ -1,0 +1,23 @@
+{
+  "appId": "com.dempire.delivery",
+  "appName": "D's Empire",
+  "webDir": "build",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://engine-chip.preview.emergentagent.com",
+    "cleartext": true,
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#000000",
+      "showSpinner": false
+    }
+  }
+}
