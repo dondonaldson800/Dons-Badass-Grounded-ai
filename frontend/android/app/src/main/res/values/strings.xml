@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">D\'s Empire</string>
+    <string name="title_activity_main">D\'s Empire</string>
+    <string name="package_name">com.dempire.delivery</string>
+    <string name="custom_url_scheme">com.dempire.delivery</string>
+</resources>
