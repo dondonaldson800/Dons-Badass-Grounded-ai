@@ -148,7 +148,7 @@ class EmpireRevenueController {
                     break;
                     
                 case 'chat':
-                    response = await fetch(`${API}/ai/chat`, {
+                    response = await fetch(`${API}/chat`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

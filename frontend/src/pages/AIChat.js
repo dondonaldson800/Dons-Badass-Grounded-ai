@@ -13,7 +13,10 @@ const AIChat = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionId] = useState(`session_${Date.now()}`);
+  const [speaking, setSpeaking] = useState(false);
+  const [currentSpeakingId, setCurrentSpeakingId] = useState(null);
   const messagesEndRef = useRef(null);
+  const speechSynthesis = window.speechSynthesis;
 
   useEffect(() => {
     loadChatHistory();
@@ -27,6 +30,65 @@ const AIChat = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Text-to-Speech function
+  const speakText = (text, messageId) => {
+    // Stop any current speech
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+    }
+
+    // If clicking the same message that's speaking, just stop
+    if (currentSpeakingId === messageId) {
+      setSpeaking(false);
+      setCurrentSpeakingId(null);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Voice settings
+    utterance.rate = 1.0; // Speed
+    utterance.pitch = 1.0; // Pitch
+    utterance.volume = 1.0; // Volume
+    
+    // Try to use a better voice if available
+    const voices = speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Google') || 
+      voice.name.includes('Enhanced') ||
+      voice.lang.startsWith('en')
+    );
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    utterance.onstart = () => {
+      setSpeaking(true);
+      setCurrentSpeakingId(messageId);
+    };
+
+    utterance.onend = () => {
+      setSpeaking(false);
+      setCurrentSpeakingId(null);
+    };
+
+    utterance.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setSpeaking(false);
+      setCurrentSpeakingId(null);
+      alert('Voice output error. Please check your browser supports speech synthesis.');
+    };
+
+    speechSynthesis.speak(utterance);
+  };
+
+  // Stop speaking
+  const stopSpeaking = () => {
+    speechSynthesis.cancel();
+    setSpeaking(false);
+    setCurrentSpeakingId(null);
   };
 
   const loadChatHistory = async () => {
@@ -67,6 +129,12 @@ const AIChat = () => {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Auto-play voice for AI response
+      setTimeout(() => {
+        speakText(response.response, messages.length);
+      }, 500);
+      
     } catch (error) {
       console.error('Error sending message:', error);
       const errorMessage = {
@@ -133,11 +201,31 @@ const AIChat = () => {
 
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div
-                className={`chat-bubble ${msg.role} rounded-2xl px-6 py-4 ${msg.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'}`}
-                data-testid={`message-${idx}`}
-              >
-                <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
+              <div className="flex items-start space-x-2">
+                {/* Speaker button for assistant messages */}
+                {msg.role === 'assistant' && (
+                  <button
+                    onClick={() => speakText(msg.content, idx)}
+                    className={`mt-2 p-2 rounded-full transition-all ${
+                      currentSpeakingId === idx 
+                        ? 'bg-green-600 hover:bg-green-700' 
+                        : 'bg-gray-700 hover:bg-gray-600'
+                    }`}
+                    title={currentSpeakingId === idx ? "Stop speaking" : "Hear AI voice"}
+                  >
+                    {currentSpeakingId === idx ? '⏸️' : '🔊'}
+                  </button>
+                )}
+                
+                <div
+                  className={`chat-bubble ${msg.role} rounded-2xl px-6 py-4 ${msg.role === 'user' ? 'rounded-br-sm' : 'rounded-bl-sm'}`}
+                  data-testid={`message-${idx}`}
+                >
+                  <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
+                </div>
+                
+                {/* Placeholder for user side to maintain alignment */}
+                {msg.role === 'user' && <div className="w-10"></div>}
               </div>
             </div>
           ))}
