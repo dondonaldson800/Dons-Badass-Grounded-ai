@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '@/App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
@@ -10,8 +10,17 @@ import QAPage from './pages/QAPage';
 import GroundedGiving from './pages/GroundedGiving';
 import { ThemeProvider } from './themes/ThemeContext';
 import GlobalLayout from './components/GlobalLayout';
+import initSentry from './config/sentry';
+
+// Initialize Sentry on app load
+initSentry();
 
 function App() {
+  useEffect(() => {
+    console.log('🏰 Don\'s Empire - Super App Container Loaded');
+    console.log('📊 Sentry Security Guard Active');
+    console.log('💰 AdMob Publisher: pub-8715031019966551');
+  }, []);
   return (
     <div className="App">
       <BrowserRouter>

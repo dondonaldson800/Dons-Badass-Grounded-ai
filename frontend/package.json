@@ -34,6 +34,7 @@
     "@radix-ui/react-toggle": "^1.1.6",
     "@radix-ui/react-toggle-group": "^1.1.7",
     "@radix-ui/react-tooltip": "^1.2.4",
+    "@sentry/react": "^10.46.0",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -61,7 +62,12 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "build:prod": "REACT_APP_ENV=production craco build",
+    "build:firebase": "yarn build:prod",
+    "test": "craco test",
+    "deploy:firebase": "yarn build:firebase && firebase deploy --only hosting",
+    "predeploy": "echo '🏰 Building Don\\'s Empire for Firebase...'",
+    "postdeploy": "echo '✅ Don\\'s Empire deployed! 💰 AdMob LIVE!'"
   },
   "browserslist": {
     "production": [
