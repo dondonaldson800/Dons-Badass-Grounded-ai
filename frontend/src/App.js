@@ -7,12 +7,14 @@ import CreativeStudio from './pages/CreativeStudio';
 import RevenueAnalytics from './pages/RevenueAnalytics';
 import Settings from './pages/Settings';
 import QAPage from './pages/QAPage';
+import GroundedGiving from './pages/GroundedGiving';
 
 const Navigation = () => {
   const location = useLocation();
   
   const navItems = [
     { path: '/', label: '🏰 Dashboard', icon: '📊' },
+    { path: '/giving', label: '🌍 Grounded Giving', icon: '💚' },
     { path: '/chat', label: '🤖 Empire AI', icon: '💬' },
     { path: '/qa', label: '❓ Q&A', icon: '📚' },
     { path: '/studio', label: '🎨 Studio', icon: '✨' },
@@ -68,6 +70,7 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/giving" element={<GroundedGiving />} />
           <Route path="/chat" element={<AIChat />} />
           <Route path="/qa" element={<QAPage />} />
           <Route path="/studio" element={<CreativeStudio />} />
