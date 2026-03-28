@@ -265,6 +265,45 @@ class EmpireRevenueController {
     async executeEmergentTask(taskData) {
         return await this.runEmpireTask(taskData.type, taskData);
     }
+
+    /**
+     * MASTER EMPIRE PATTERN - Owner's Badass Trigger
+     * Ads First, AI Second - Revenue-First Execution
+     * 
+     * @param {string} prompt - The AI prompt/question
+     * @param {string} taskType - 'qa', 'chat', or 'image'
+     * @param {Object} options - Additional options (appId, sessionId, etc.)
+     * @returns {Promise} - AI response after ad trigger
+     */
+    async processEmpireRequest(prompt, taskType = 'qa', options = {}) {
+        console.log(`[Master Empire] 💎 Processing ${taskType.toUpperCase()} request...`);
+        
+        if (!this.isReady) {
+            await this.initializeEmpire();
+        }
+
+        // 1. REVENUE FIRST - Trigger AdMob Interstitial
+        console.log(`[Master Empire] 💰 Step 1: Loading AdMob Interstitial...`);
+        await this.loadAdMob(this.publisherId);
+        
+        if (this.shouldShowAd()) {
+            console.log(`[Master Empire] 📢 Step 2: Showing Prestitial Ad...`);
+            await this.showAdBeforeTask();
+        }
+
+        // 2. AI SECOND - Execute "Badass" Grounded AI Logic
+        console.log(`[Master Empire] 🤖 Step 3: Executing Badass AI...`);
+        const result = await this.executeGroundedAI({
+            type: taskType,
+            prompt: prompt,
+            appId: options.appId,
+            sessionId: options.sessionId,
+            category: options.category
+        });
+
+        console.log(`[Master Empire] ✅ Empire Request Complete!`);
+        return result;
+    }
 }
 
 // Create global instance
