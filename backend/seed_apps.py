@@ -1,13 +1,22 @@
 import asyncio
 import sys
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, timezone
 import uuid
+from dotenv import load_dotenv
 
-# MongoDB connection
-mongo_url = "mongodb://localhost:27017"
+# Load environment variables
+load_dotenv()
+
+# MongoDB connection - Use environment variables (PRODUCTION READY!)
+mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+db_name = os.environ.get('DB_NAME', 'test_database')
 client = AsyncIOMotorClient(mongo_url)
-db = client["test_database"]
+db = client[db_name]
+
+print(f"✅ Seed script connected to: {mongo_url}")
+print(f"✅ Database: {db_name}")
 
 # 20 Empire Apps
 EMPIRE_APPS = [
