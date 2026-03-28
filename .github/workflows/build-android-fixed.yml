@@ -1,0 +1,88 @@
+name: Android Debug Build (Fixed)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      JAVA_TOOL_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Cache Gradle wrapper and caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            frontend/android/.gradle
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: NPM install
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build React app
+        working-directory: frontend
+        run: npm run build
+
+      - name: Capacitor Sync (if present)
+        working-directory: frontend
+        run: |
+          if [ -f ./node_modules/.bin/capacitor ]; then
+            npx cap sync android || true
+          fi
+
+      - name: Grant execute permissions for Gradle
+        run: chmod +x ./frontend/android/gradlew
+
+      - name: Assemble Debug APK
+        working-directory: frontend/android
+        run: ./gradlew clean assembleDebug --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload build logs (if failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-logs
+          path: frontend/android/build/reports
+
+# Troubleshooting tips:
+# - Set up ANDROID_HOME env if needed
+# - Check Android SDK version in gradle.properties/root build.gradle if build fails due to SDK
+# - Secrets (like signing info) are not required for debug builds
+# - Adjust node/Java versions or cache patterns as needed
