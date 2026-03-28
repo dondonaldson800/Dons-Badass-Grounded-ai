@@ -5,7 +5,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useEmpireTheme } from '../themes/ThemeContext';
-import empireController from '../controllers/EmpireRevenueController';
+import EmpireRevenueController from '../controllers/EmpireRevenueController';
+
+// Create controller instance
+const empireController = new EmpireRevenueController();
 
 const GeneralAI = () => {
   const { theme } = useEmpireTheme();
