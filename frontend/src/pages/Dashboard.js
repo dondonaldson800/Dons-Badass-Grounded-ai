@@ -233,9 +233,17 @@ const Dashboard = () => {
 
       {/* Empire AI Apps - Quick Access */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-          🏰 Empire AI Suite
-        </h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            🏰 Empire AI Suite
+          </h2>
+          <a 
+            href="/pricing" 
+            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-lg font-bold transition-all"
+          >
+            💎 Upgrade to Pro
+          </a>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* General AI */}
           <a href="/general" className="group relative bg-gradient-to-br from-blue-950 to-black border-2 border-blue-500 rounded-2xl p-6 shadow-xl shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all">

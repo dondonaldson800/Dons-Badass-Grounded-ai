@@ -539,6 +539,10 @@ async def get_api_key():
     master_key = await get_master_api_key()
     return {"master_key": master_key}
 
+# Import and register payment routes
+from routes.payments import router as payments_router
+app.include_router(payments_router)
+
 # Include router
 app.include_router(api_router)
 

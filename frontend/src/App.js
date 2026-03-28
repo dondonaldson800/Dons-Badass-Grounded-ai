@@ -11,6 +11,9 @@ import GroundedGiving from './pages/GroundedGiving';
 import GeneralAI from './pages/GeneralAI';
 import LawAI from './pages/LawAI';
 import HealthAI from './pages/HealthAI';
+import Pricing from './pages/Pricing';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 import { ThemeProvider } from './themes/ThemeContext';
 import GlobalLayout from './components/GlobalLayout';
 import initSentry from './config/sentry';
@@ -40,6 +43,9 @@ function App() {
               <Route path="/studio" element={<CreativeStudio />} />
               <Route path="/revenue" element={<RevenueAnalytics />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
+              <Route path="/payment/cancel" element={<PaymentCancel />} />
             </Routes>
           </GlobalLayout>
         </ThemeProvider>
