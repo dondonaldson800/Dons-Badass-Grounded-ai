@@ -2,41 +2,155 @@ name: Build Android APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  GRADLE_OPTS: "-Xmx6g -XX:MaxPermSize=2048m"
+  NODE_VERSION: '20'
+  JAVA_VERSION: '17'
 
 jobs:
-  build:
+  build-android:
+    name: Build Optimized Android APK
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v1
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          java-version: '11'
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+      
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Build APK
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+      
+      - name: 📦 Install frontend dependencies
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile
+      
+      - name: 🔨 Build optimized React app
+        working-directory: ./frontend
         run: |
-          ./gradlew assembleRelease -x lint
-          ./gradlew assembleRelease --info --parallel --build-cache -Pandroid.enableR8=true -Pandroid.useAndroidX=true
-
-      - name: Minification with ProGuard
+          export DISABLE_ESLINT_PLUGIN=true
+          export GENERATE_SOURCEMAP=false
+          yarn build
+      
+      - name: 📱 Sync Capacitor
+        working-directory: ./frontend
+        run: npx cap sync android
+      
+      - name: 🏗️ Grant execute permission to gradlew
+        working-directory: ./frontend/android
+        run: chmod +x gradlew
+      
+      - name: 🎯 Build Release APK with optimizations
+        working-directory: ./frontend/android
         run: |
-          ./gradlew assembleRelease -PenableProguard=true
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v2
+          ./gradlew clean
+          ./gradlew assembleRelease \
+            --info \
+            --parallel \
+            --build-cache \
+            -Pandroid.enableR8=true \
+            -Pandroid.useAndroidX=true \
+            -Pandroid.enableResourceOptimizations=true \
+            -Dorg.gradle.workers.max=4 \
+            -Dorg.gradle.parallel=true
+      
+      - name: 🚀 Build Debug APK (fallback)
+        if: failure()
+        working-directory: ./frontend/android
+        run: |
+          ./gradlew assembleDebug \
+            --info \
+            -Pandroid.useAndroidX=true
+      
+      - name: 📊 List APK outputs
+        run: |
+          echo "=== Release APK Output ==="
+          find ./frontend/android -name "*.apk" -type f
+      
+      - name: 📤 Upload Release APK
+        if: success()
+        uses: actions/upload-artifact@v4
         with:
-          name: android-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          name: dons-empire-release-apk
+          path: frontend/android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+      
+      - name: 📤 Upload Debug APK (fallback)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dons-empire-debug-apk
+          path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+      
+      - name: 🏷️ Create Release with APK
+        if: github.ref == 'refs/heads/main' && success()
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: android-v${{ github.run_number }}
+          name: D's Empire Android v${{ github.run_number }}
+          body: |
+            🏰 **D's Empire - Android APK Build**
+            
+            **Build Details:**
+            - Build #: ${{ github.run_number }}
+            - Commit: ${{ github.sha }}
+            - Branch: main
+            - Date: ${{ github.event.head_commit.timestamp }}
+            
+            **Features:**
+            ✅ Fully optimized Release APK
+            ✅ R8 Code Shrinking & Obfuscation
+            ✅ AndroidX Support
+            ✅ Multidex Enabled
+            ✅ AdMob Integration Ready
+            
+            **Installation:**
+            1. Download the APK from the Release Assets
+            2. Enable installation from unknown sources on your Android device
+            3. Tap the APK to install
+            
+            **App Details:**
+            - Namespace: com.dempire.delivery
+            - Min SDK: 24
+            - Target SDK: Latest
+            - AdMob App ID: 6268835652
+            
+            🎯 20-App Super Container LIVE! 💰
+          files: frontend/android/app/build/outputs/apk/release/app-release.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: ❌ Build Failed Notification
+        if: failure()
+        run: |
+          echo "❌ APK Build Failed!"
+          echo "Check the logs above for details"
+          exit 1
+      
+      - name: ✅ Build Success Summary
+        if: success()
+        run: |
+          echo "✅ D's Empire Android APK built successfully!"
+          echo "📊 Build completed with optimizations:"
+          echo "  • R8 Code Optimization Enabled"
+          echo "  • Parallel Gradle Builds"
+          echo "  • Resource Optimization"
+          echo "  • AndroidX Support"
+          echo "  • Multidex Enabled"
