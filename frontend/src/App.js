@@ -8,6 +8,9 @@ import RevenueAnalytics from './pages/RevenueAnalytics';
 import Settings from './pages/Settings';
 import QAPage from './pages/QAPage';
 import GroundedGiving from './pages/GroundedGiving';
+import GeneralAI from './pages/GeneralAI';
+import LawAI from './pages/LawAI';
+import HealthAI from './pages/HealthAI';
 import { ThemeProvider } from './themes/ThemeContext';
 import GlobalLayout from './components/GlobalLayout';
 import initSentry from './config/sentry';
@@ -28,6 +31,9 @@ function App() {
           <GlobalLayout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/general" element={<GeneralAI />} />
+              <Route path="/law" element={<LawAI />} />
+              <Route path="/health" element={<HealthAI />} />
               <Route path="/giving" element={<GroundedGiving />} />
               <Route path="/chat" element={<AIChat />} />
               <Route path="/qa" element={<QAPage />} />
