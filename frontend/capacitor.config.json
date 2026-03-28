@@ -18,6 +18,10 @@
       "launchShowDuration": 2000,
       "backgroundColor": "#000000",
       "showSpinner": false
+    },
+    "AdMob": {
+      "appId": "6268835652",
+      "publisherId": "pub-8715031019966551"
     }
   }
 }

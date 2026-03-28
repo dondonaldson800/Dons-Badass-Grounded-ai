@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast, ToastContainer } from '../components/Toast';
+import EmpireRevenueController from '../controllers/EmpireRevenueController';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+// Initialize Empire Revenue Controller
+const empireController = new EmpireRevenueController();
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -32,6 +36,8 @@ const Dashboard = () => {
   useEffect(() => {
     loadDashboard();
     checkCredits();
+    // Initialize Empire Revenue Engine
+    empireController.initializeEmpire();
   }, []);
 
   const checkCredits = async () => {
@@ -73,13 +79,15 @@ const Dashboard = () => {
 
     setLoadingAnswer(true);
     try {
-      const response = await axios.post(`${API}/qa/ask`, {
-        question: question,
-        app_id: selectedAppForQA,
+      // Execute through Empire Revenue Controller (Badass Workflow)
+      const response = await empireController.runEmpireTask('qa', {
+        type: 'qa',
+        prompt: question,
+        appId: selectedAppForQA,
         category: selectedAppForQA ? apps.find(a => a.id === selectedAppForQA)?.category : null
       });
 
-      setRecentQA([response.data, ...recentQA].slice(0, 3));
+      setRecentQA([response, ...recentQA].slice(0, 3));
       setQuestion('');
     } catch (error) {
       console.error('Error asking question:', error);
@@ -94,12 +102,14 @@ const Dashboard = () => {
 
     setGeneratingImage(true);
     try {
-      const response = await axios.post(`${API}/generate-image`, {
+      // Execute through Empire Revenue Controller (Badass Workflow)
+      const response = await empireController.runEmpireTask('image', {
+        type: 'image',
         prompt: imagePrompt
       });
 
       setLastGeneratedImage({
-        image_data: response.data.image_data,
+        image_data: response.image_data,
         prompt: imagePrompt
       });
       setImagePrompt('');

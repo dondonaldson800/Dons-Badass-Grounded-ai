@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import EmpireRevenueController from '../controllers/EmpireRevenueController';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+// Initialize Empire Revenue Controller
+const empireController = new EmpireRevenueController();
 
 const AIChat = () => {
   const [messages, setMessages] = useState([]);
@@ -13,6 +17,8 @@ const AIChat = () => {
 
   useEffect(() => {
     loadChatHistory();
+    // Initialize Empire Revenue Engine
+    empireController.initializeEmpire();
   }, []);
 
   useEffect(() => {
@@ -42,18 +48,21 @@ const AIChat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageContent = input;
     setInput('');
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API}/chat`, {
-        session_id: sessionId,
-        message: input
+      // Execute through Empire Revenue Controller (Badass Workflow)
+      const response = await empireController.runEmpireTask('chat', {
+        type: 'chat',
+        prompt: messageContent,
+        sessionId: sessionId
       });
 
       const assistantMessage = {
         role: 'assistant',
-        content: response.data.response,
+        content: response.response,
         timestamp: new Date().toISOString()
       };
 
