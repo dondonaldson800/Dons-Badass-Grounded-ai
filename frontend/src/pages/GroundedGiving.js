@@ -78,7 +78,7 @@ const GroundedGiving = () => {
         fontFamily: 'Inter, system-ui, sans-serif'
       }}
     >
-      {/* Header */}
+      {/* Simplified Header - No back button needed with global nav */}
       <header 
         className="border-b"
         style={{ 
@@ -87,25 +87,13 @@ const GroundedGiving = () => {
         }}
       >
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold" style={{ color: theme.text }}>
-                🌍 Grounded Giving
-              </h1>
-              <p className="text-sm mt-1 opacity-80">
-                Transparent technology. Grounded action. Lasting impact.
-              </p>
-            </div>
-            <button
-              onClick={() => window.history.back()}
-              className="px-4 py-2 rounded-lg font-medium transition-all"
-              style={{
-                backgroundColor: theme.primary,
-                color: '#FFFFFF'
-              }}
-            >
-              ← Back to Empire
-            </button>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold" style={{ color: theme.text }}>
+              🌍 Grounded Giving
+            </h1>
+            <p className="text-sm mt-1 opacity-80">
+              Transparent technology. Grounded action. Lasting impact.
+            </p>
           </div>
         </div>
       </header>
