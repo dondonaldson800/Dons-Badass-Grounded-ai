@@ -5,11 +5,10 @@
  */
 
 import { useState, useEffect } from 'react';
-import { getEmpireTheme } from '../themes/EmpireThemes';
-
-const theme = getEmpireTheme('GROUNDED_GIVING');
+import { useEmpireTheme } from '../themes/ThemeContext';
 
 const GroundedGiving = () => {
+  const { theme } = useEmpireTheme();
   const [activeTab, setActiveTab] = useState('home');
   const [impactStories, setImpactStories] = useState([]);
   const [transparencyData, setTransparencyData] = useState(null);
