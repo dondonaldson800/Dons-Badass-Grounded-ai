@@ -30,6 +30,12 @@ const LawAI = () => {
   };
 
   const speakText = (text, messageId) => {
+    // Check if speechSynthesis is available
+    if (!speechSynthesis) {
+      console.warn('Speech synthesis not supported');
+      return;
+    }
+
     if (speechSynthesis.speaking) {
       speechSynthesis.cancel();
     }
@@ -51,6 +57,12 @@ const LawAI = () => {
     };
 
     utterance.onend = () => {
+      setSpeaking(false);
+      setCurrentSpeakingId(null);
+    };
+
+    utterance.onerror = (error) => {
+      console.error('Speech synthesis error:', error);
       setSpeaking(false);
       setCurrentSpeakingId(null);
     };
@@ -143,7 +155,7 @@ const LawAI = () => {
               {messages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className="flex items-start space-x-2">
-                    {msg.role === 'assistant' && (
+                    {msg.role === 'assistant' && speechSynthesis && (
                       <button
                         onClick={() => speakText(msg.content, idx)}
                         className={`mt-2 p-2 rounded-full transition-all ${
