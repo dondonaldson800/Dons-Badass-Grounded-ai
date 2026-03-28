@@ -4,14 +4,37 @@
  */
 
 export const EmpireThemes = {
-  // App 1: The Flagship (Intelligence)
-  GROUNDED_AI: {
-    name: "Grounded AI",
-    primary: "#2E5BFF",      // Electric Cobalt
-    secondary: "#C0C0C0",    // Silver
-    background: "#121212",   // Deep Charcoal
+  // App 1: General AI (Truth/Intelligence)
+  GENERAL_AI: {
+    name: "General AI",
+    primary: "#2E5BFF",      // Electric Cobalt (User specified)
+    secondary: "#5B8FFF",    // Light Cobalt
+    background: "#0F1419",   // Deep Navy
     text: "#FFFFFF",
-    description: "Intelligence & AI Flagship"
+    surface: "#1a2332",      // Card background
+    description: "General Purpose AI Assistant"
+  },
+
+  // App 2: Law AI (Justice)
+  LAW_AI: {
+    name: "Law AI",
+    primary: "#C5A572",      // Justice Gold
+    secondary: "#D4B896",    // Light Gold
+    background: "#1A1612",   // Dark Brown
+    text: "#F5F5DC",         // Parchment
+    surface: "#2a2419",      // Card background
+    description: "Legal Guidance & Advice"
+  },
+
+  // App 3: Health AI (Wellness)
+  HEALTH_AI: {
+    name: "Health AI",
+    primary: "#4CAF50",      // Medical Green
+    secondary: "#66BB6A",    // Light Green
+    background: "#0F1912",   // Dark Green-Black
+    text: "#FFFFFF",
+    surface: "#1a2920",      // Card background
+    description: "Health & Medical Guidance"
   },
   
   // App 4: The Non-Profit (Human Connection)

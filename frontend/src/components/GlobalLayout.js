@@ -4,7 +4,7 @@
  * Always visible across all screens
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEmpireTheme } from '../themes/ThemeContext';
 
@@ -12,6 +12,21 @@ const GlobalLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, currentApp, switchTheme } = useEmpireTheme();
+
+  // Auto-detect route and switch theme
+  useEffect(() => {
+    const routeThemeMap = {
+      '/general': 'GENERAL_AI',
+      '/law': 'LAW_AI',
+      '/health': 'HEALTH_AI',
+      '/giving': 'GROUNDED_GIVING',
+      '/chat': 'GENERAL_AI',
+      '/': 'DEFAULT'
+    };
+
+    const detectedTheme = routeThemeMap[location.pathname] || 'DEFAULT';
+    switchTheme(detectedTheme);
+  }, [location.pathname, switchTheme]);
 
   const navItems = [
     {

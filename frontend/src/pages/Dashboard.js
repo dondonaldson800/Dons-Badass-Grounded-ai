@@ -231,6 +231,62 @@ const Dashboard = () => {
         <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-blue-500"></div>
       </div>
 
+      {/* Empire AI Apps - Quick Access */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+          🏰 Empire AI Suite
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* General AI */}
+          <a href="/general" className="group relative bg-gradient-to-br from-blue-950 to-black border-2 border-blue-500 rounded-2xl p-6 shadow-xl shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all">
+            <div className="text-center">
+              <div className="text-5xl mb-3">💬</div>
+              <h3 className="text-lg font-bold text-blue-400 mb-2">General AI</h3>
+              <p className="text-xs text-gray-400 mb-3">Ask me anything - I'm here to help!</p>
+              <div className="text-xs bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full border border-blue-500 inline-block">
+                Electric Cobalt
+              </div>
+            </div>
+          </a>
+
+          {/* Law AI */}
+          <a href="/law" className="group relative bg-gradient-to-br from-yellow-950 to-black border-2 border-yellow-600 rounded-2xl p-6 shadow-xl shadow-yellow-600/20 hover:shadow-yellow-600/40 hover:scale-105 transition-all">
+            <div className="text-center">
+              <div className="text-5xl mb-3">⚖️</div>
+              <h3 className="text-lg font-bold mb-2" style={{color: '#C5A572'}}>Law AI</h3>
+              <p className="text-xs text-gray-400 mb-3">Legal guidance & advice assistant</p>
+              <div className="text-xs px-3 py-1 rounded-full border inline-block" style={{backgroundColor: 'rgba(197, 165, 114, 0.2)', color: '#C5A572', borderColor: '#C5A572'}}>
+                Justice Gold
+              </div>
+            </div>
+          </a>
+
+          {/* Health AI */}
+          <a href="/health" className="group relative bg-gradient-to-br from-green-950 to-black border-2 border-green-500 rounded-2xl p-6 shadow-xl shadow-green-500/20 hover:shadow-green-500/40 hover:scale-105 transition-all">
+            <div className="text-center">
+              <div className="text-5xl mb-3">🏥</div>
+              <h3 className="text-lg font-bold text-green-400 mb-2">Health AI</h3>
+              <p className="text-xs text-gray-400 mb-3">Medical guidance & health info</p>
+              <div className="text-xs bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500 inline-block">
+                Medical Green
+              </div>
+            </div>
+          </a>
+
+          {/* Grounded Giving */}
+          <a href="/giving" className="group relative bg-gradient-to-br from-green-950 to-black border-2 rounded-2xl p-6 shadow-xl hover:scale-105 transition-all" style={{borderColor: '#8A9A5B', boxShadow: '0 20px 25px -5px rgba(138, 154, 91, 0.2)'}}>
+            <div className="text-center">
+              <div className="text-5xl mb-3">❤️</div>
+              <h3 className="text-lg font-bold mb-2" style={{color: '#8A9A5B'}}>Grounded Giving</h3>
+              <p className="text-xs text-gray-400 mb-3">Non-profit & human connection</p>
+              <div className="text-xs px-3 py-1 rounded-full border inline-block" style={{backgroundColor: 'rgba(138, 154, 91, 0.2)', color: '#8A9A5B', borderColor: '#8A9A5B'}}>
+                Sage Green
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
       {/* Stats Overview */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
