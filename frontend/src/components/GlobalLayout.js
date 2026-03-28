@@ -71,8 +71,8 @@ const GlobalLayout = ({ children }) => {
         color: theme.text
       }}
     >
-      {/* Main Content Area */}
-      <main className="flex-1 pb-20">
+      {/* Main Content Area - Extra padding to avoid watermark */}
+      <main className="flex-1 pb-24">
         {children}
       </main>
 
@@ -81,11 +81,14 @@ const GlobalLayout = ({ children }) => {
         className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-md border-t"
         style={{
           backgroundColor: `${theme.background}e6`, // Semi-transparent
-          borderColor: theme.border || `${theme.primary}33`
+          borderColor: theme.border || `${theme.primary}33`,
+          paddingBottom: '0.5rem'
         }}
       >
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-around items-center h-20">
+        {/* Container with left alignment to avoid watermark */}
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex justify-start items-center h-20 gap-8">
+            {/* gap-8 = spacing between buttons, justify-start = left-aligned */}
             {navItems.map(item => {
               const active = isActive(item.path);
               
@@ -138,6 +141,32 @@ const GlobalLayout = ({ children }) => {
 
       {/* Inline Styles for Animations */}
       <style>{`
+        /* Navigation adjustments for Emergent watermark */
+        nav {
+          padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+        }
+        
+        /* Keep navigation buttons on left side, away from watermark */
+        nav > div {
+          max-width: 900px; /* Limit width to keep buttons left-aligned */
+          margin-left: 0;
+          margin-right: auto;
+          padding-left: 1rem;
+        }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+          nav > div {
+            max-width: 100%;
+            padding-right: 150px !important; /* Extra space for watermark on mobile */
+          }
+          
+          nav button {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+          }
+        }
+        
         .heart-pulse {
           animation: heartBeat 1.5s ease-in-out infinite;
         }
