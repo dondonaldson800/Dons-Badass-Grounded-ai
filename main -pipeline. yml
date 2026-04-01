@@ -1,0 +1,36 @@
+name: Master Deployment Pipeline
+
+# 1. The Trigger
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy App
+    runs-on: ubuntu-latest
+
+    steps:
+      # 2. Get the Code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 3. Set the Environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use the version matching your app
+
+      # 4. Install Dependencies (Forced installation)
+      - name: Install Dependencies
+        run: npm install
+
+      # 5. Compile the Code
+      - name: Build Project
+        run: npm run build
+
+      # 6. Deployment / Output
+      # (This section changes based on where the app is going)
+      - name: Output Artifacts
+        run: echo "Build complete and ready for deployment."
