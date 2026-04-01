@@ -48,7 +48,7 @@ jobs:
 
       - name: NPM install
         working-directory: frontend
-        run: npm ci
+        run: npm install
 
       - name: Build React app
         working-directory: frontend
