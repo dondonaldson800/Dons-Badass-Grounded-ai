@@ -1,4 +1,4 @@
-name: Deploy to Amazon Appstore
+.github/workflows/amazon-build.ymlname: Deploy to Amazon Appstore
 on:
   workflow_dispatch:
 
@@ -18,12 +18,14 @@ jobs:
         run: npm install -g eas-cli
 
       - name: Install Dependencies
+        working-directory: ./frontend
         run: npm install
 
       - name: Build Amazon APK
+        working-directory: ./frontend
         run: eas build --platform android --profile production --non-interactive --clear-cache
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
-
+          
