@@ -1,28 +1,10 @@
 name: Deploy to Amazon Appstore
+
 on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install Expo & EAS
-        run: npm install -g eas-cli
-      - name: Build Amazon APK
-        working-directory: ./frontend
-        run: eas build --platform android --profile production --non-interactive --no-wait
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
-          AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
-          jobs:
-  build:
+  build_job:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,12 +18,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Expo & EAS
-        run: npm install -g expo-cli eas-cli
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
 
       - name: Install Dependencies
         run: npm install
 
       - name: Build Amazon APK
         run: eas build --platform android --profile production --non-interactive --no-wait
-        
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          
