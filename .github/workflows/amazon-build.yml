@@ -1,4 +1,4 @@
-.github/workflows/amazon-build.ymlname: Deploy to Amazon Appstore
+name: Deploy to Amazon Appstore
 on:
   workflow_dispatch:
 
@@ -16,10 +16,6 @@ jobs:
 
       - name: Install Expo & EAS
         run: npm install -g eas-cli
-
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: npm install
 
       - name: Build Amazon APK
         working-directory: ./frontend
