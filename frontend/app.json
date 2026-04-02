@@ -1,37 +1,18 @@
 {
   "expo": {
     "name": "Dons-Badass-Grounded-ai",
-    "slug": "dons-badass-grounded-ai",
+    "slug": "dons-grounded-ai-empire-v2",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.dondonaldson.groundedai"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "extra": {
       "eas": {
-        "projectId": "de9a3bfd-69f0-4928-afc7-2114dfc8376d"
+        "projectId": "de9a3bfd-89f0-4928-afc7-2114dfc8376d"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/de9a3bfd-89f0-4928-afc7-2114dfc8376d"
     }
   }
 }
-
