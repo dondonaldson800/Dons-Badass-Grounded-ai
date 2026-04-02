@@ -25,7 +25,5 @@ jobs:
         run: npm install
 
       - name: Build Amazon APK
-        run: eas build --platform android --profile production --non-interactive --no-wait
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform android --profile production --non-interactive --no-wait --path ./
           
