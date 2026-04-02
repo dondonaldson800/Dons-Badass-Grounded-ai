@@ -21,4 +21,27 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
-          
+          jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Expo & EAS
+        run: npm install -g expo-cli eas-cli
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Amazon APK
+        run: eas build --platform android --profile production --non-interactive --no-wait
+        
