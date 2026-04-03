@@ -5,12 +5,12 @@
   "dependencies": {
     "@capacitor/android": "6",
     "@capacitor/cli": "6",
-    "@capacitor/core": "6",
-    "axios": "^1.8.4"
+    "@capacitor/core": "6"
   },
   "expo": {
     "name": "Dons Grounded AI",
     "slug": "dons-grounded-ai-empire-v2",
+    "owner": "dondonaldson800",
     "extra": {
       "eas": {
         "projectId": "de9a3bfd-69f0-4928-afc7-2114dfc8376d"
