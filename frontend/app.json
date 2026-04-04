@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "workflow": "generic",
     "android": {
-      "package": "com.dondonaldson.groundedai"
+  "package": "com.dondonaldson800.grounded"
     },
     "extra": {
       "eas": {
