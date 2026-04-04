@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Dons-Badass-Grounded-ai",
-    "slug": "dons-grounded-ai-empire-v2",
+    "slug":  "dons-grounded-ai-empire",
     "version": "1.0.0",
     "orientation": "portrait",
     "workflow": "generic",
