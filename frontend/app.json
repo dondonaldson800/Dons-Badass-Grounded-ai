@@ -4,12 +4,7 @@
     "slug": "dons-grounded-ai-empire-v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "workflow": "generic",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "android": {
       "package": "com.dondonaldson.groundedai"
     },
@@ -20,3 +15,4 @@
     }
   }
 }
+
