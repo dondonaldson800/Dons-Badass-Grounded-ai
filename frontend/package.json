@@ -1,0 +1,21 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "6",
+    "@capacitor/cli": "6",
+    "@capacitor/core": "6"
+  },
+  "expo": {
+    "name": "Dons Grounded AI",
+    "slug": "dons-grounded-empire",
+    "owner": "dondonaldson800",
+    "extra": {
+      "eas": {
+        "projectId": "89225541-b629-407c-bfbf-9aa155455d29"
+      }
+    }
+  }
+}
+
