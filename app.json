@@ -1,0 +1,25 @@
+
+{
+  "name": "Grounded Empire",
+  "short_name": "Empire",
+  "description": "Stop Guessing. Start Knowing. The first AI Search Engine with Verified Sources and real-time grounding.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0A0E14",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/fluency/512/temple-of-demeter.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": [
+    "productivity",
+    "reference",
+    "utilities",
+    "business"
+  ]
+}

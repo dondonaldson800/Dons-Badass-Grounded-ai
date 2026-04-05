@@ -1,0 +1,8 @@
+{
+  "name": "Grounded Empire",
+  "description": "Stop Guessing. Start Knowing. The first AI Search Engine and Fact Checker with Verified Sources and real-time grounding powered by Gemini AI. Zero hallucinations, 100% truth.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
