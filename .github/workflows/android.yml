@@ -24,8 +24,7 @@ jobs:
         run: npm run build
 
       - name: Sync Capacitor
-        run: |
-          npx cap sync android
+        run: npx cap sync android
 
       - name: Build with Gradle
         run: |
