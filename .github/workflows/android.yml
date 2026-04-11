@@ -10,8 +10,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-      - name: install
-        run: npm install
       - name: build
-        run: npm run build
-        
+        run: |
+          npm install
+          rm -f tsconfig.json
+          echo '{"compilerOptions":{"target":"ESNext","module":"ESNext","moduleResolution":"node","jsx":"react-jsx","strict":true}}' > tsconfig.json
+          npm run build
+          
