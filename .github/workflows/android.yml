@@ -10,17 +10,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-      - name: Build App
+      - name: build
         run: |
           npm install --legacy-peer-deps
           npm run build --if-present
-          # We are creating a dummy file just to make sure the Artifacts section appears
+          # Create a folder and a dummy file to force the Artifacts section to show up
           mkdir -p output
-          echo "Build Success" > output/success.txt
+          echo "Build finished successfully" > output/status.txt
 
-      - name: Upload Artifacts
+      - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
-          name: empire-build-package
+          name: grounded-ai-package
           path: output/
           
