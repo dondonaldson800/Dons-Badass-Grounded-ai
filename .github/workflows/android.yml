@@ -10,9 +10,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-      - name: Build
+      - name: Build App
         run: |
           npm install --legacy-peer-deps
-          # This command builds the app while ignoring ALL script errors
-          npm run build --if-present || true
+          npm run build --if-present
+          # We are creating a dummy file just to make sure the Artifacts section appears
+          mkdir -p output
+          echo "Build Success" > output/success.txt
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: empire-build-package
+          path: output/
           
