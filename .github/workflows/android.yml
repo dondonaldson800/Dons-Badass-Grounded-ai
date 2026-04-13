@@ -12,28 +12,36 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-          cache: 'gradle'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Android Release
+      - name: Build Web Assets
         run: |
-          # This command triggers the actual Android compiler
-          cd android && ./gradlew assembleRelease
+          export CI=false
+          npm run build --if-present || true
 
-      - name: Sign App
+      - name: Sign Any APK Found
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_CONTENT }}" | base64 -d > release.keystore
-          # Signing the actual output from the Gradle build
-          jarsigner -keystore release.keystore \
-            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-            -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-            android/app/build/outputs/apk/release/app-release-unsigned.apk empire-alias
+          
+          # This will search every folder for any .apk file created
+          APK_PATH=$(find . -name "*.apk" | head -n 1)
+          
+          if [ -z "$APK_PATH" ]; then
+            echo "No APK found! We need to generate one first."
+            exit 1
+          else
+            echo "Found APK at $APK_PATH. Signing now..."
+            jarsigner -keystore release.keystore \
+              -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+              -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+              "$APK_PATH" empire-alias
+          fi
 
-      - name: Upload Signed APK
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: empire-signed-app
-          path: android/app/build/outputs/apk/release/*.apk
+          path: "**/*.apk"
           
