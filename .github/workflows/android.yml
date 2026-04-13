@@ -12,26 +12,28 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
+          cache: 'gradle'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Unsigned APK
+      - name: Build Android Release
         run: |
-          export CI=false
-          npm run build --if-present || true
+          # This command triggers the actual Android compiler
+          cd android && ./gradlew assembleRelease
 
       - name: Sign App
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_CONTENT }}" | base64 -d > release.keystore
-          find . -name "*.apk" -exec jarsigner -keystore release.keystore \
+          # Signing the actual output from the Gradle build
+          jarsigner -keystore release.keystore \
             -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-            -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" {} empire-alias \;
+            -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            android/app/build/outputs/apk/release/app-release-unsigned.apk empire-alias
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: empire-signed-app
-          path: "**/*.apk"
-          
+          path: android/app/build/outputs/apk/release/*.apk
           
