@@ -1,19 +1,37 @@
-name: Build APK
+name: Build and Sign APK
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: setup
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'zulu'
-      - name: Force Build
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build Unsigned APK
         run: |
-          npm install --legacy-peer-deps
-          # This tells the builder to keep going even if it sees a warning
           export CI=false
           npm run build --if-present || true
+
+      - name: Sign App
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_CONTENT }}" | base64 -d > release.keystore
+          find . -name "*.apk" -exec jarsigner -keystore release.keystore \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" {} empire-alias \;
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: empire-signed-app
+          path: "**/*.apk"
+          
           
