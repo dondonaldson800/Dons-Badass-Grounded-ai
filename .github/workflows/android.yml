@@ -1,47 +1,36 @@
-name: Build and Sign APK
-on: [push, workflow_dispatch]
+name: Build Android APK
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          python-version: '3.10'
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Build Web Assets
         run: |
-          export CI=false
-          npm run build --if-present || true
+          sudo apt update
+          sudo apt install -y libpython3-dev python3-pip zip unzip
+          pip install --upgrade pip
+          pip install Cython==0.29.33
+          pip install buildozer kivy
 
-      - name: Sign Any APK Found
+      - name: Build with Buildozer
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_CONTENT }}" | base64 -d > release.keystore
-          
-          # This will search every folder for any .apk file created
-          APK_PATH=$(find . -name "*.apk" | head -n 1)
-          
-          if [ -z "$APK_PATH" ]; then
-            echo "No APK found! We need to generate one first."
-            exit 1
-          else
-            echo "Found APK at $APK_PATH. Signing now..."
-            jarsigner -keystore release.keystore \
-              -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-              -keypass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-              "$APK_PATH" empire-alias
-          fi
+          # This command tells the factory to build the Android package
+          yes | buildozer -v android debug
+        continue-on-error: false
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          name: empire-signed-app
-          path: "**/*.apk"
+          name: app-debug
+          path: bin/*.apk
           
