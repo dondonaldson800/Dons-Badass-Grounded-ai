@@ -28,7 +28,8 @@ jobs:
           yes | buildozer android debug
 
       - name: Upload APK
-        uses: uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3
+        
         
         with:
           name: app-debug
