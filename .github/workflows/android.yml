@@ -1,38 +1,56 @@
 name: Build Android APK
+
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
+    - name: Checkout Source
+      uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev automake
-          pip install --upgrade pip
-          pip install buildozer "Cython==0.29.33" virtualenv
+    # Cache Buildozer global dependencies to speed up consecutive builds
+    - name: Cache Buildozer Global
+      uses: actions/cache@v3
+      with:
+        path: ~/.buildozer
+        key: buildozer-global-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          buildozer-global-${{ runner.os }}-
 
-      - name: Build with Buildozer
-        run: |
-          yes | buildozer android debug
+    # Cache project-specific Buildozer directory
+    - name: Cache Project Buildozer
+      uses: actions/cache@v3
+      with:
+        path: .buildozer
+        key: buildozer-project-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          buildozer-project-${{ runner.os }}-
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+    - name: Install System Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        pip install --upgrade buildozer cython virtualenv
+
+    - name: Execute Buildozer
+      run: |
+        # Using a single architecture avoids the memory crash.
+        # yes command auto-accepts Android SDK licenses.
+        yes | buildozer -v android debug
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Dons-Badass-AI-APK
+        path: bin/*.apk
         
-        
-        
-        with:
-          name: app-debug
-          path: bin/*.apk
-          
