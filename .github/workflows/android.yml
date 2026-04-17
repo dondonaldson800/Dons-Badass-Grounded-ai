@@ -1,52 +1,50 @@
-name: Android Build
+name: Build Android APK
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout Source
-        uses: actions/checkout@v4
+    - name: Checkout Source
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+    # MASTER ARCHITECTURE FIX 1: Purge any corrupted files accidentally committed to GitHub
+    - name: Clean Workspace
+      run: |
+        rm -rf .buildozer bin
+        rm -rf *.apk
 
-      - name: Create Virtual Memory (Swap Space)
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo dd if=/dev/zero of=/swapfile bs=1M count=8192
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
-          free -m
+    - name: Install System Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        # MASTER ARCHITECTURE FIX 2: Pin Cython to 0.29.33 to prevent the UnicodeDecodeError crash
+        pip install buildozer Cython==0.29.33 virtualenv
 
-      - name: Install Buildozer Natively
-        run: |
-          pip3 install --user --upgrade buildozer cython virtualenv
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Create Virtual Memory (Swap Space)
+      run: |
+        sudo fallocate -l 8G /swapfile
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
 
-      - name: Execute Buildozer
-        run: yes | buildozer android debug
+    - name: Execute Buildozer
+      run: |
+        yes | buildozer -v android debug
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: bin/*.apk
-          
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Dons-Badass-AI-APK
+        path: bin/*.apk
+        
