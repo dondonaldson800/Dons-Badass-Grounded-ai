@@ -36,11 +36,13 @@ jobs:
           sudo swapon /swapfile
           free -m
 
+      - name: Install Buildozer Natively
+        run: |
+          pip3 install --user --upgrade buildozer cython virtualenv
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Execute Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          command: buildozer android debug
-          buildozer_version: master
+        run: buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
