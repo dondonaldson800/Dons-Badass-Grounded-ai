@@ -42,7 +42,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Execute Buildozer
-        run: buildozer android debug
+        run: yes | buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
