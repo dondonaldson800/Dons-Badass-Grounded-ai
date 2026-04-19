@@ -45,11 +45,11 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [impact, setImpact] = useState({
-    goalsMet: 12,
+    goalsMet: 0,
     totalGoals: 20,
-    activeVolunteers: 47,
-    totalDonations: 15420,
-    livesImpacted: 312,
+    activeVolunteers: 0,
+    totalDonations: 0,
+    livesImpacted: 0,
   });
 
   const [events, setEvents] = useState([
