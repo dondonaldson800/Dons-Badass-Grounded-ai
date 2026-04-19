@@ -19,8 +19,8 @@ const ImpactScreen = () => {
 
   // Sample historical data (would come from backend in production)
   const monthlyImpact = [
-    { month: 'Nov', donations: 0, volunteers: 0, lives: 0 },
     { month: 'Dec', donations: 0, volunteers: 0, lives: 0 },
+    { month: 'Jan', donations: 3840, volunteers: 12, lives: 58 },
   ];
 
   return (
@@ -80,8 +80,8 @@ const ImpactScreen = () => {
             <Text style={[styles.metricLabel, { color: '#CCC' }]}>
               Total Donations
             </Text>
-            <Text style={[styles.metricChange, { color: '#666' }]}>
-              Starting fresh
+            <Text style={[styles.metricChange, { color: theme.colors.success }]}>
+              ↑ First month!
             </Text>
           </View>
         </View>

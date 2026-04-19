@@ -45,11 +45,11 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [impact, setImpact] = useState({
-    goalsMet: 0,
+    goalsMet: 3,
     totalGoals: 20,
-    activeVolunteers: 0,
-    totalDonations: 0,
-    livesImpacted: 0,
+    activeVolunteers: 12,
+    totalDonations: 3840,
+    livesImpacted: 58,
   });
 
   const [events, setEvents] = useState([
@@ -58,24 +58,32 @@ export default function App() {
       title: 'Community Food Drive',
       date: '2025-01-05',
       location: 'Central Park',
-      volunteers: 12,
-      spotsLeft: 8,
+      volunteers: 18,
+      spotsLeft: 2,
     },
     {
       id: '2',
       title: 'Youth Mentorship Program',
       date: '2025-01-12',
       location: 'Community Center',
-      volunteers: 8,
-      spotsLeft: 12,
+      volunteers: 14,
+      spotsLeft: 6,
     },
     {
       id: '3',
       title: 'Environmental Cleanup',
       date: '2025-01-19',
       location: 'Riverside Trail',
-      volunteers: 15,
-      spotsLeft: 5,
+      volunteers: 19,
+      spotsLeft: 1,
+    },
+    {
+      id: '4',
+      title: 'Senior Care Visit',
+      date: '2025-01-26',
+      location: 'Sunrise Retirement Home',
+      volunteers: 5,
+      spotsLeft: 10,
     },
   ]);
 
