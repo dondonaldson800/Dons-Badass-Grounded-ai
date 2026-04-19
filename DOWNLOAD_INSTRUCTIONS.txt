@@ -1,0 +1,79 @@
+================================================================================
+  GROUNDED EMPIRE - Apps 5-20 Download Instructions
+================================================================================
+
+LOCATION OF FILES
+-----------------
+All ZIP archives are located in: /app/app-archives/
+
+FILES AVAILABLE
+---------------
+✅ 16 Individual App ZIPs (Apps 5-20)
+   - app5-fit-empire.zip
+   - app6-recipe-hub.zip
+   - app7-budget-master.zip
+   - app8-real-estate-pro.zip
+   - app9-travel-guide.zip
+   - app10-pet-care.zip
+   - app11-learn-hub.zip
+   - app12-career-path.zip
+   - app13-home-garden.zip
+   - app14-photo-studio.zip
+   - app15-music-player.zip
+   - app16-sports-news.zip
+   - app17-book-tracker.zip
+   - app18-style-guide.zip
+   - app19-auto-care.zip
+   - app20-zen-wellness.zip
+
+✅ 1 Master ZIP (All 16 Apps)
+   - grounded-empire-apps-5-20-complete.zip (123 KB)
+
+HOW TO DOWNLOAD
+---------------
+Option 1: Use Emergent Platform Download Feature
+   - Navigate to /app/app-archives/ in the file explorer
+   - Click download button for individual files or master ZIP
+
+Option 2: Access Source Directories Directly
+   - Source code is also available unzipped in:
+     /app/expo-app5/ through /app/expo-app20/
+   - Copy these directories to your local machine
+
+Option 3: Terminal Access (if available)
+   - Use scp, rsync, or similar tools to transfer files
+
+WHAT'S INSIDE EACH ZIP
+----------------------
+Each app ZIP contains:
+- App.js (main application)
+- app.json (Expo configuration)
+- package.json (dependencies)
+- eas.json (build configuration)
+- screens/ folder (4 screen components)
+- .gitignore
+- README.md
+
+NEXT STEPS AFTER DOWNLOAD
+--------------------------
+1. Extract ZIP file(s)
+2. Run: yarn install
+3. Test: npx expo start
+4. Deploy: Follow /app/QUICK-DEPLOYMENT-APPS-5-20.md
+
+DOCUMENTATION
+-------------
+Read these files for complete guidance:
+- /app/MASTER_INDEX.md - Complete overview
+- /app/app-archives/APPS-5-20-MANIFEST.md - App details
+- /app/QUICK-DEPLOYMENT-APPS-5-20.md - Deployment guide
+- /app/CREDENTIALS_GUIDE.md - API keys & tokens
+
+SUPPORT
+-------
+All apps are production-ready and fully functional.
+For troubleshooting, see documentation files above.
+
+================================================================================
+Ready to download and deploy! Good luck with your Grounded Empire! 🚀
+================================================================================
