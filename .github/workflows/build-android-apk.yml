@@ -1,0 +1,175 @@
+name: Build Android APK & AAB
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: '17'
+  NODE_VERSION: '18'
+
+jobs:
+  build-android:
+    name: Build Android APK & AAB Artifacts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          yarn install --frozen-lockfile
+
+      - name: Build React App
+        run: |
+          cd frontend
+          yarn build
+        env:
+          REACT_APP_BACKEND_URL: ${{ secrets.REACT_APP_BACKEND_URL || 'https://empire-backend.run.app' }}
+          REACT_APP_ADMOB_PUB_ID: pub-8715031019966551
+          REACT_APP_ADMOB_APP_ID: 6268835652
+
+      - name: Copy build to Capacitor
+        run: |
+          cp -r frontend/build ./build
+
+      - name: Setup Capacitor
+        run: |
+          npm install -g @capacitor/cli
+          npx cap sync android
+
+      - name: Generate Release Keystore
+        run: |
+          cd android
+          keytool -genkey -v -keystore release.keystore \
+            -alias empire \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass empire2025 \
+            -keypass empire2025 \
+            -dname "CN=D's Empire, OU=Empire, O=Empire Inc, L=City, S=State, C=US"
+
+      - name: Build Debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Build Release APK
+        run: |
+          cd android
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Build Release AAB
+        run: |
+          cd android
+          ./gradlew bundleRelease --stacktrace
+
+      - name: Sign APK
+        run: |
+          cd android/app/build/outputs/apk/release
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore ../../../../release.keystore \
+            -storepass empire2025 \
+            -keypass empire2025 \
+            app-release-unsigned.apk empire || true
+
+      - name: Rename and Organize Artifacts
+        run: |
+          mkdir -p artifacts
+          
+          # Copy Debug APK
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             artifacts/empire-debug.apk || true
+          
+          # Copy Release APK
+          cp android/app/build/outputs/apk/release/app-release-unsigned.apk \
+             artifacts/empire-release.apk || true
+          
+          # Copy AAB
+          cp android/app/build/outputs/bundle/release/app-release.aab \
+             artifacts/empire-release.aab || true
+          
+          # List artifacts
+          ls -lh artifacts/
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: empire-debug-apk
+          path: artifacts/empire-debug.apk
+          if-no-files-found: warn
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: empire-release-apk
+          path: artifacts/empire-release.apk
+          if-no-files-found: warn
+
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@v3
+        with:
+          name: empire-release-aab
+          path: artifacts/empire-release.aab
+          if-no-files-found: warn
+
+      - name: Create Release (on tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/empire-debug.apk
+            artifacts/empire-release.apk
+            artifacts/empire-release.aab
+          body: |
+            ## 🏰 D's Empire - Android Release
+            
+            ### 📦 Artifacts:
+            - **Debug APK**: For testing (install directly)
+            - **Release APK**: For distribution (unsigned)
+            - **Release AAB**: For Google Play Store upload
+            
+            ### 🚀 Installation:
+            1. Download `empire-debug.apk` or `empire-release.apk`
+            2. Enable "Install from Unknown Sources" on Android
+            3. Install the APK
+            
+            ### 📱 Features:
+            - 4 AI Assistants (General, Law, Health, Giving)
+            - Stripe Payments (Subscriptions + Credits)
+            - Voice/TTS enabled
+            - AdMob integration
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Summary
+        run: |
+          echo "## 🎉 Build Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Artifacts Generated:" >> $GITHUB_STEP_SUMMARY
+          echo "- Debug APK: \`empire-debug.apk\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Release APK: \`empire-release.apk\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Release AAB: \`empire-release.aab\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📥 Download:" >> $GITHUB_STEP_SUMMARY
+          echo "Go to **Actions** → **This workflow run** → **Artifacts**" >> $GITHUB_STEP_SUMMARY
