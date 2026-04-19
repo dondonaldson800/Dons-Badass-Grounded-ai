@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Grounded Giving",
+    "slug": "grounded-giving",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "grounded-giving",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1A1A"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.empire.giving",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A1A1A"
+      },
+      "package": "com.empire.giving",
+      "versionCode": 1,
+      "permissions": ["INTERNET"]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "grounded-giving-project"
+      }
+    }
+  }
+}
