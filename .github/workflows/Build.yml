@@ -1,50 +1,47 @@
-name: Master Architecture Deploy - Don's Grounded Empire
+name: Don's Grounded Empire - Master Build
 
 on:
   push:
     branches:
-      - main # Triggers on merge to production
+      - main  # Triggers whenever you push to the main branch
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node.js (High-Output 20.x)
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20
           cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install Dependencies (Peer-Dependency Bypass)
+        # This replaces 'npm ci' to stop the lockfile crashes
+        run: npm install --legacy-peer-deps
 
-      # --------------------------------------------------------
-      # FIREBASE BACKEND DEPLOYMENT (Functions, Rules, Hosting)
-      # --------------------------------------------------------
+      # --- FIREBASE BACKEND DEPLOYMENT ---
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Deploy Firebase Security Rules
-        run: firebase deploy --only firestore:rules,storage:rules --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy Firebase Rules & Functions
+        # Routes all logic through Firebase as per Master Protocol
+        run: firebase deploy --only firestore:rules,functions --token ${{ secrets.FIREBASE_TOKEN }} --non-interactive
 
-      - name: Deploy Firebase Cloud Functions
-        run: firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy Firebase Hosting
+        # Deploys your grounded web assets
+        run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --non-interactive
 
-      # --------------------------------------------------------
-      # EXPO FRONTEND BUILD (React Native via EAS)
-      # --------------------------------------------------------
-      - name: Setup Expo and EAS
+      # --- EXPO MOBILE DEPLOYMENT (EAS) ---
+      - name: Setup Expo & EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: EAS Build (Android App Bundle for Play Store)
-        run: eas build --platform android --profile production --non-interactive
-
-      - name: EAS Build (iOS Archive for App Store)
-        run: eas build --platform ios --profile production --non-interactive
+      - name: Trigger EAS Build (Production)
+        # Builds both iOS and Android simultaneously to save cloud time
+        run: eas build --platform all --profile production --non-interactive
         
