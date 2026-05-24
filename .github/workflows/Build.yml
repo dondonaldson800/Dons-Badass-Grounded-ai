@@ -20,7 +20,7 @@ jobs:
       - name: 🛡️ Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: 🔑 Authenticate Expo credentials
+      - name: r7xJva3GyukvQJAzKRy5eAmZ14w0tPG6a3YQkYKD
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas login --with-token-raw "$EXPO_TOKEN"
