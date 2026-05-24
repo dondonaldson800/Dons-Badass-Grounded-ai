@@ -1,35 +1,28 @@
-name: EAS Android Build (APK & AAB Bundle)
+name: EAS Build
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
-    name: Build APK and AAB for ContractDecoder Pro
     runs-on: ubuntu-latest
     steps:
-      - name: 🔍 Checkout Repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: ⚙️ Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
-          cache: 'npm'
+          node-node-version: 18
 
-      - name: 🛡️ Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN_TWO }}
 
-      - name: r7xJva3GyukvQJAzKRy5eAmZ14w0tPG6a3YQkYKD
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas login --with-token-raw "$EXPO_TOKEN"
+      - name: Install dependencies
+        run: npm install
 
-      - name: 📦 Install Application Dependencies
-        run: npm ci
-
-      - name: 🚀 Compile Production App Bundle (.aab file)
-        run: eas build --platform android --profile production --non-interactive --no-wait
-
-      - name: 📱 Compile Preview Android Package (.apk file)
-        run: eas build --platform android --profile preview --non-interactive --no-wait
+      - name: Build
+        run: eas build --platform all --non-interactive
+        
