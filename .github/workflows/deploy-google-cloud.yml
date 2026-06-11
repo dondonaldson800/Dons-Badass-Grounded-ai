@@ -54,7 +54,7 @@ jobs:
             --cpu 1 \
             --min-instances 0 \
             --max-instances 10 \
-            --set-env-vars "MONGO_URL=${{ secrets.MONGO_URL }},DB_NAME=${{ secrets.DB_NAME }},STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }},EMERGENT_LLM_KEY=${{ secrets.EMERGENT_LLM_KEY }},CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}"
+            --set-env-vars "MONGO_URL=${{ secrets.MONGO_URL }},DB_NAME=${{ secrets.DB_NAME }},STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }},EMERGENT_LLM_KEY=${{ secrets.EMERGENT_LLM_KEY }},CORS_ORI[...]
 
       - name: Get Cloud Run URL
         id: get-url
@@ -111,20 +111,215 @@ jobs:
           projectId: ${{ env.PROJECT_ID }}
           entryPoint: ./
 
+  build-mobile:
+    name: Build Mobile (APK & AAB)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd mobile
+          npm install
+
+      - name: Create keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          cd mobile
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/release.keystore
+
+      - name: Build APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          cd mobile
+          npx react-native build-android --mode=release
+
+      - name: Build AAB (Android App Bundle)
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          cd mobile
+          cd android
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=app/release.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Upload APK & AAB artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobile-builds
+          path: |
+            mobile/android/app/build/outputs/apk/release/
+            mobile/android/app/build/outputs/bundle/release/
+
+  deploy-google-play:
+    name: Deploy to Google Play Store
+    runs-on: ubuntu-latest
+    needs: build-mobile
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download mobile builds
+        uses: actions/download-artifact@v3
+        with:
+          name: mobile-builds
+          path: ./builds
+
+      - name: Deploy AAB to Google Play (Internal Testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: com.dons.empire
+          releaseFiles: './builds/mobile/android/app/build/outputs/bundle/release/*.aab'
+          track: internal
+          inAppUpdatePriority: 5
+          status: inProgress
+
+  deploy-galaxy-store:
+    name: Deploy to Samsung Galaxy Store
+    runs-on: ubuntu-latest
+    needs: build-mobile
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download mobile builds
+        uses: actions/download-artifact@v3
+        with:
+          name: mobile-builds
+          path: ./builds
+
+      - name: Setup Galaxy Store CLI
+        run: |
+          npm install -g samsung-mobile-api
+          
+      - name: Deploy APK to Galaxy Store
+        env:
+          GALAXY_API_KEY: ${{ secrets.GALAXY_STORE_API_KEY }}
+          GALAXY_APP_ID: ${{ secrets.GALAXY_STORE_APP_ID }}
+        run: |
+          # Using Samsung's REST API for app submission
+          curl -X POST \
+            -H "Authorization: Bearer $GALAXY_API_KEY" \
+            -H "Content-Type: multipart/form-data" \
+            -F "file=@./builds/mobile/android/app/build/outputs/apk/release/*.apk" \
+            "https://api.samsungapps.com/v2/apps/$GALAXY_APP_ID/uploads"
+
+  deploy-amazon-appstore:
+    name: Deploy to Amazon Appstore
+    runs-on: ubuntu-latest
+    needs: build-mobile
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download mobile builds
+        uses: actions/download-artifact@v3
+        with:
+          name: mobile-builds
+          path: ./builds
+
+      - name: Setup Amazon CLI
+        run: |
+          pip install amazon-appstore-api
+
+      - name: Deploy APK to Amazon Appstore
+        env:
+          AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
+          AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
+          AMAZON_APP_ID: ${{ secrets.AMAZON_APP_ID }}
+        run: |
+          python3 << 'EOF'
+          import requests
+          import json
+          
+          # Get access token
+          token_url = "https://api.amazontoolkit.com/oauth/v2/token"
+          token_data = {
+              "grant_type": "client_credentials",
+              "client_id": "${{ secrets.AMAZON_CLIENT_ID }}",
+              "client_secret": "${{ secrets.AMAZON_CLIENT_SECRET }}"
+          }
+          
+          token_response = requests.post(token_url, data=token_data)
+          access_token = token_response.json()["access_token"]
+          
+          # Upload APK
+          headers = {
+              "Authorization": f"Bearer {access_token}",
+              "Content-Type": "application/json"
+          }
+          
+          with open('./builds/mobile/android/app/build/outputs/apk/release/*.apk', 'rb') as apk_file:
+              files = {'file': apk_file}
+              upload_url = "https://api.amazontoolkit.com/v1/applications/${{ secrets.AMAZON_APP_ID }}/apks"
+              requests.post(upload_url, files=files, headers=headers)
+          
+          EOF
+
   notify:
     name: Deployment Notification
     runs-on: ubuntu-latest
-    needs: [deploy-backend, deploy-frontend]
+    needs: [deploy-backend, deploy-frontend, deploy-google-play, deploy-galaxy-store, deploy-amazon-appstore]
     if: always()
     
     steps:
       - name: Deployment Status
         run: |
-          if [ "${{ needs.deploy-backend.result }}" == "success" ] && [ "${{ needs.deploy-frontend.result }}" == "success" ]; then
-            echo "✅ Deployment successful!"
-            echo "Backend: ${{ needs.deploy-backend.outputs.backend_url }}"
-            echo "Frontend: https://${{ env.PROJECT_ID }}.web.app"
+          BACKEND_STATUS="${{ needs.deploy-backend.result }}"
+          FRONTEND_STATUS="${{ needs.deploy-frontend.result }}"
+          MOBILE_GOOGLE_STATUS="${{ needs.deploy-google-play.result }}"
+          MOBILE_GALAXY_STATUS="${{ needs.deploy-galaxy-store.result }}"
+          MOBILE_AMAZON_STATUS="${{ needs.deploy-amazon-appstore.result }}"
+          
+          if [ "$BACKEND_STATUS" == "success" ] && [ "$FRONTEND_STATUS" == "success" ] && \
+             [ "$MOBILE_GOOGLE_STATUS" == "success" ] && [ "$MOBILE_GALAXY_STATUS" == "success" ] && \
+             [ "$MOBILE_AMAZON_STATUS" == "success" ]; then
+            echo "✅ Full Deployment Successful!"
+            echo ""
+            echo "📦 Deployment Summary:"
+            echo "🔵 Backend: ✅ Deployed to Cloud Run"
+            echo "🎨 Frontend: ✅ Deployed to Firebase Hosting"
+            echo "📱 Google Play: ✅ Deployed (Internal Testing)"
+            echo "📱 Galaxy Store: ✅ Deployed"
+            echo "📱 Amazon Appstore: ✅ Deployed"
           else
-            echo "❌ Deployment failed"
+            echo "❌ Deployment Status:"
+            echo "🔵 Backend: $BACKEND_STATUS"
+            echo "🎨 Frontend: $FRONTEND_STATUS"
+            echo "📱 Google Play: $MOBILE_GOOGLE_STATUS"
+            echo "📱 Galaxy Store: $MOBILE_GALAXY_STATUS"
+            echo "📱 Amazon Appstore: $MOBILE_AMAZON_STATUS"
             exit 1
           fi
