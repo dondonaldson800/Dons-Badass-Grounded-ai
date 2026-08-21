@@ -5,10 +5,20 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build Type'
+        required: true
+        default: 'apk'
+        type: choice
+        options:
+          - apk
+          - aab
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.inputs.build_type == 'apk'
     steps:
       - uses: actions/checkout@v3
       
@@ -24,8 +34,48 @@ jobs:
       - name: Setup EAS
         run: npm install -g eas-cli
       
-      - name: Build APK with EAS
+      - name: Build APK with EAS (Preview)
         env:
           EAS_BUILD_PROFILE: preview
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
         run: eas build --platform android --profile preview --non-interactive
+      
+      - name: Upload APK Artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk
+          path: '**/*.apk'
+          retention-days: 7
+
+  build-aab:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.build_type == 'aab'
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Setup EAS
+        run: npm install -g eas-cli
+      
+      - name: Build AAB with EAS (Production)
+        env:
+          EAS_BUILD_PROFILE: production
+          EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
+        run: eas build --platform android --profile production --non-interactive
+      
+      - name: Upload AAB Artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-aab
+          path: '**/*.aab'
+          retention-days: 7
