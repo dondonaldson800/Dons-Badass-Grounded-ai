@@ -14,6 +14,11 @@ on:
         options:
           - apk
           - aab
+      submit_to_play_store:
+        description: 'Submit to Play Store after build?'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build-apk:
@@ -79,3 +84,37 @@ jobs:
           name: android-aab
           path: '**/*.aab'
           retention-days: 7
+
+  submit-to-play-store:
+    runs-on: ubuntu-latest
+    needs: build-aab
+    if: github.event.inputs.submit_to_play_store == 'true' && github.event.inputs.build_type == 'aab'
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - name: Download AAB Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: android-aab
+      
+      - name: Setup Google Play Service Account
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}" | base64 -d > service-account.json
+      
+      - name: Install Play Store API
+        run: npm install @google-play/developer-api
+      
+      - name: Submit to Play Store
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          APP_PACKAGE_NAME: com.dondonaldson.grounded.ai
+        run: |
+          echo "AAB file ready for Play Store submission"
+          echo "Use Play Console to manually upload: $(find . -name '*.aab' -type f)"
+          # Automated submission script would go here
+          # For now, manual upload via Play Console is recommended
