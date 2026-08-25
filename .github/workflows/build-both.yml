@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.inputs.build_apk == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
@@ -43,7 +43,7 @@ jobs:
           eas build --platform android --profile preview --wait
       
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: '**/*.apk'
@@ -53,10 +53,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.inputs.build_aab == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
@@ -74,7 +74,7 @@ jobs:
           eas build --platform android --profile production --wait
       
       - name: Upload AAB
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-aab
           path: '**/*.aab'
