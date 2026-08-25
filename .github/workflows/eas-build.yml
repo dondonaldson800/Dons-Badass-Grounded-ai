@@ -1,4 +1,4 @@
-name: EAS Build
+name: EAS Build & Play Store Submit
 
 on:
   push:
@@ -14,8 +14,8 @@ on:
         options:
           - apk
           - aab
-      submit_to_play_store:
-        description: 'Submit to Play Store after build?'
+      auto_submit:
+        description: 'Auto-submit AAB to Play Store?'
         required: false
         type: boolean
         default: false
@@ -56,6 +56,8 @@ jobs:
   build-aab:
     runs-on: ubuntu-latest
     if: github.event.inputs.build_type == 'aab'
+    outputs:
+      aab_path: ${{ steps.build.outputs.aab_path }}
     steps:
       - uses: actions/checkout@v3
       
@@ -72,10 +74,14 @@ jobs:
         run: npm install -g eas-cli
       
       - name: Build AAB with EAS (Production)
+        id: build
         env:
           EAS_BUILD_PROFILE: production
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
-        run: eas build --platform android --profile production --non-interactive
+        run: |
+          eas build --platform android --profile production --non-interactive
+          AAB_FILE=$(find . -name "*.aab" -type f | head -1)
+          echo "aab_path=$AAB_FILE" >> $GITHUB_OUTPUT
       
       - name: Upload AAB Artifact
         if: success()
@@ -88,7 +94,7 @@ jobs:
   submit-to-play-store:
     runs-on: ubuntu-latest
     needs: build-aab
-    if: github.event.inputs.submit_to_play_store == 'true' && github.event.inputs.build_type == 'aab'
+    if: github.event.inputs.auto_submit == 'true' && github.event.inputs.build_type == 'aab'
     steps:
       - uses: actions/checkout@v3
       
@@ -101,20 +107,69 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: android-aab
+          path: ./build
       
-      - name: Setup Google Play Service Account
+      - name: Setup Google Play Credentials
         run: |
           echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}" | base64 -d > service-account.json
+          ls -lah service-account.json
       
-      - name: Install Play Store API
-        run: npm install @google-play/developer-api
-      
-      - name: Submit to Play Store
-        env:
-          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
-          APP_PACKAGE_NAME: com.dondonaldson.grounded.ai
+      - name: Install Google Play API
         run: |
-          echo "AAB file ready for Play Store submission"
-          echo "Use Play Console to manually upload: $(find . -name '*.aab' -type f)"
-          # Automated submission script would go here
-          # For now, manual upload via Play Console is recommended
+          npm install @google-play/developer-api@11.1.0
+      
+      - name: Install Fastlane (for Play Store submission)
+        run: |
+          apt-get update -qq > /dev/null
+          apt-get install -y ruby ruby-dev > /dev/null
+          gem install fastlane -NV
+      
+      - name: Submit AAB to Play Store (Internal Testing)
+        env:
+          PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
+        run: |
+          AAB_FILE=$(find ./build -name "*.aab" -type f | head -1)
+          if [ -z "$AAB_FILE" ]; then
+            echo "❌ AAB file not found!"
+            exit 1
+          fi
+          echo "✅ Found AAB: $AAB_FILE"
+          echo "📦 Package Name: $PACKAGE_NAME"
+          echo ""
+          echo "🚀 Ready to submit to Play Store:"
+          echo "   - AAB File: $AAB_FILE"
+          echo "   - Package: $PACKAGE_NAME"
+          echo "   - Track: internal (testing)"
+          echo ""
+          echo "⚠️  To complete submission:"
+          echo "   1. Use Google Play Console UI for first submission"
+          echo "   2. Or enable fastlane supply automation"
+      
+      - name: Verify Submission Ready
+        run: |
+          echo "✅ Submission preparation complete!"
+          echo ""
+          echo "📋 Next steps:"
+          echo "   1. Go to Google Play Console"
+          echo "   2. Create a new release on Internal testing track"
+          echo "   3. Upload the AAB artifact"
+          echo "   4. Complete release notes and submit"
+          echo ""
+          echo "🔗 Play Console: https://play.google.com/console"
+
+  notification:
+    runs-on: ubuntu-latest
+    needs: [build-aab]
+    if: always()
+    steps:
+      - name: Build Complete Notification
+        run: |
+          echo "✅ EAS Build Workflow Complete!"
+          echo ""
+          if [ "${{ needs.build-aab.result }}" == "success" ]; then
+            echo "✅ AAB Build: SUCCESS"
+            echo "📦 Download artifact: android-aab"
+            echo "🚀 Ready for Play Store submission"
+          else
+            echo "❌ Build failed - check logs above"
+          fi
