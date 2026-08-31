@@ -1,25 +1,34 @@
-
 {
-  "name": "Grounded Empire",
-  "short_name": "Empire",
-  "description": "Stop Guessing. Start Knowing. The first AI Search Engine with Verified Sources and real-time grounding.",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#0A0E14",
-  "theme_color": "#D4AF37",
-  "icons": [
-    {
-      "src": "https://img.icons8.com/fluency/512/temple-of-demeter.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+  "expo": {
+    "name": "Grounded Empire",
+    "slug": "grounded-empire",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0E14"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.dondonaldson.groundedempire"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0E14"
+      },
+      "package": "com.dondonaldson.groundedempire",
+      "versionCode": 1,
+      "buildType": "apk"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
-  ],
-  "orientation": "portrait",
-  "categories": [
-    "productivity",
-    "reference",
-    "utilities",
-    "business"
-  ]
+  }
 }
