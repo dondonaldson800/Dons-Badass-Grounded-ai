@@ -1,0 +1,60 @@
+name: EAS Build Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform'
+        required: true
+        default: 'android'
+        type: choice
+        options:
+          - android
+      profile:
+        description: 'Build Profile'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - preview
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Setup EAS CLI
+        run: npm install -g eas-cli
+      
+      - name: Build with EAS
+        env:
+          EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
+        run: |
+          eas build --platform ${{ github.event.inputs.platform }} --profile ${{ github.event.inputs.profile }} --wait
+      
+      - name: Find and Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            **/*.apk
+            **/*.aab
+          retention-days: 30
+      
+      - name: Build Complete
+        run: |
+          echo "✅ Build Complete!"
+          echo "Platform: ${{ github.event.inputs.platform }}"
+          echo "Profile: ${{ github.event.inputs.profile }}"
+          echo "Download artifacts from Actions tab"
