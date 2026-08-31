@@ -25,10 +25,16 @@
       },
       "package": "com.dondonaldson.groundedempire",
       "versionCode": 1,
-      "buildType": "apk"
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }
